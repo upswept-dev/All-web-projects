@@ -1,0 +1,1740 @@
+html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java Practice Coach</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f1117;--paper:#fafaf8;--card:#ffffff;--edge:#e2e0da;
+  --code-bg:#0f1117;--code-surface:#1a1d26;--code-border:#2d3044;
+  --accent:#e85d04;--accent2:#0077b6;--accent3:#2d6a4f;--accent4:#7b2d8b;
+  --warn:#c9184a;--tip:#2d6a4f;--yellow:#f4a261;--muted:#6b6860;
+  --kw:#f97316;--ty:#60a5fa;--st:#86efac;--cm:#6b7280;--nm:#fbbf24;--mt:#c084fc;--vr:#fb923c;
+  --r:10px;--r-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.65}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  background:var(--ink);
+  display:flex;align-items:stretch;
+  border-bottom:2px solid var(--accent);
+  overflow-x:auto;gap:0;
+}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  padding:0 20px;border-right:1px solid #333;
+  font-family:'DM Serif Display',serif;font-size:15px;
+  color:#fff;white-space:nowrap;min-width:max-content;
+}
+.brand span{color:var(--accent)}
+.nav-scroll{display:flex;flex:1;overflow-x:auto}
+.nav-scroll::-webkit-scrollbar{height:0}
+.ntab{
+  padding:14px 16px;
+  font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:#888;background:none;border:none;border-bottom:2px solid transparent;
+  cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;
+  transition:all .2s;margin-bottom:-2px;
+}
+.ntab:hover{color:#ccc;background:rgba(255,255,255,.04)}
+.ntab.on{color:var(--accent);border-bottom-color:var(--accent);background:rgba(232,93,4,.08)}
+.progress-bar{height:2px;background:linear-gradient(90deg,var(--accent),var(--yellow));position:fixed;top:0;left:0;z-index:300;transition:width .4s;pointer-events:none}
+
+/* ── SECTIONS ── */
+.sec{display:none}.sec.on{display:block}
+.wrap{max-width:960px;margin:0 auto;padding:32px 24px 80px}
+
+/* ── HERO ── */
+.hero{padding:48px 0 36px;border-bottom:1px solid var(--edge);margin-bottom:40px;position:relative}
+.hero::before{content:'';position:absolute;right:0;top:0;width:200px;height:200px;background:radial-gradient(circle,rgba(232,93,4,.08) 0%,transparent 70%);pointer-events:none}
+.topic-tag{display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:var(--accent);border-radius:4px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;font-family:'IBM Plex Mono',monospace}
+.hero h1{font-family:'DM Serif Display',serif;font-size:38px;line-height:1.15;margin-bottom:10px}
+.hero p{color:var(--muted);font-size:15px;max-width:600px}
+
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--edge);border-radius:var(--r);padding:24px;margin-bottom:24px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.card.blue::before{background:var(--accent2)}
+.card.orange::before{background:var(--accent)}
+.card.green::before{background:var(--accent3)}
+.card.purple::before{background:var(--accent4)}
+.card.red::before{background:var(--warn)}
+.card.yellow::before{background:var(--yellow)}
+
+.card-title{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--edge)}
+.card-title .icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ic-b{background:#dbeafe;color:#1d4ed8}.ic-o{background:#fed7aa;color:#c2410c}.ic-g{background:#d1fae5;color:#065f46}.ic-p{background:#f3e8ff;color:#6b21a8}.ic-r{background:#fee2e2;color:#b91c1c}.ic-y{background:#fef3c7;color:#92400e}
+
+.card h3{font-size:15px;font-weight:700;margin:20px 0 10px;color:var(--ink)}
+.card p{color:var(--muted);margin-bottom:8px;line-height:1.75}
+.card p strong{color:var(--ink)}
+
+/* ── CODE ── */
+.code-wrap{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--r);overflow:hidden;margin:14px 0;font-family:'IBM Plex Mono',monospace;font-size:13px}
+.code-head{background:var(--code-surface);border-bottom:1px solid var(--code-border);padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+.code-label{font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.06em;font-family:'DM Sans',sans-serif}
+.code-tag{font-size:11px;color:#f97316;font-family:'DM Sans',sans-serif;font-weight:700}
+.code-body{padding:16px;overflow-x:auto;line-height:1.9}
+.code-body code{display:block;white-space:pre;color:#e2e8f0}
+.kw{color:#f97316}.ty{color:#60a5fa}.st{color:#86efac}.cm{color:#6b7280;font-style:italic}.nm{color:#fbbf24}.mt{color:#c084fc}.vr{color:#fb923c}.an{color:#4ade80}
+
+/* ── ANNOTATIONS ── */
+.note{border-left:3px solid;padding:12px 16px;border-radius:0 var(--r-sm) var(--r-sm) 0;margin:10px 0;font-size:13.5px}
+.note-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-family:'DM Sans',sans-serif}
+.note.b{border-color:var(--accent2);background:#eff6ff}.note.b .note-label{color:var(--accent2)}
+.note.o{border-color:var(--accent);background:#fff7ed}.note.o .note-label{color:var(--accent)}
+.note.g{border-color:var(--accent3);background:#f0fdf4}.note.g .note-label{color:var(--accent3)}
+.note.r{border-color:var(--warn);background:#fff1f2}.note.r .note-label{color:var(--warn)}
+.note.y{border-color:var(--yellow);background:#fffbeb}.note.y .note-label{color:#b45309}
+.note.p{border-color:var(--accent4);background:#faf5ff}.note.p .note-label{color:var(--accent4)}
+.note p{color:var(--ink);margin:0}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+.tbl th{background:var(--ink);color:#fff;padding:10px 14px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.tbl th:first-child{border-radius:var(--r-sm) 0 0 0}.tbl th:last-child{border-radius:0 var(--r-sm) 0 0}
+.tbl td{padding:10px 14px;border-bottom:1px solid var(--edge);vertical-align:top;color:var(--muted)}
+.tbl td:first-child{color:var(--ink);font-weight:600}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#f5f5f3}
+.yes{color:var(--tip);font-weight:700}.no{color:var(--warn);font-weight:700}
+
+/* ── QUIZ ── */
+.quiz{background:var(--card);border:1px solid var(--edge);border-radius:var(--r);overflow:hidden;margin-bottom:18px}
+.quiz-top{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid var(--edge);background:#fafaf8}
+.quiz-badge{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:20px;font-family:'DM Sans',sans-serif}
+.qb-out{background:#fed7aa;color:#c2410c}
+.qb-bug{background:#fce7f3;color:#9d174d}
+.qb-write{background:#d1fae5;color:#065f46}
+.qb-compile{background:#dbeafe;color:#1e40af}
+.qb-mem{background:#f3e8ff;color:#6b21a8}
+.qb-hard{background:#0f1117;color:#f97316}
+.quiz-num{font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.quiz-body{padding:18px 20px}
+.quiz-q{font-size:14.5px;color:var(--ink);line-height:1.75;margin-bottom:14px}
+.quiz-code{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--r-sm);padding:14px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.85;overflow-x:auto;white-space:pre;color:#e2e8f0;margin-bottom:14px}
+.think-box{background:#fffbeb;border:1px dashed #f59e0b;border-radius:var(--r-sm);padding:10px 14px;font-size:13px;color:#92400e;margin-bottom:12px;font-style:italic}
+.reveal-btn{background:var(--ink);color:#fff;border:none;padding:9px 20px;border-radius:var(--r-sm);font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:6px;transition:all .2s}
+.reveal-btn:hover{background:var(--accent);transform:translateY(-1px)}
+.ans-box{display:none;margin-top:14px;border-top:1px solid var(--edge);padding-top:14px}
+.ans-box.show{display:block}
+.ans-out{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--r-sm);padding:12px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#4ade80;white-space:pre;margin-bottom:10px}
+.ans-why{font-size:13.5px;color:var(--muted);line-height:1.75}
+.ans-why strong{color:var(--ink)}
+
+/* ── STEP LIST ── */
+.steps{list-style:none;margin:12px 0}
+.steps li{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start}
+.step-n{background:var(--ink);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.step-c{font-size:13.5px;color:var(--muted);line-height:1.7}.step-c strong{color:var(--ink)}
+
+/* ── MEMORY DIAGRAM ── */
+.mem{background:var(--code-bg);border:1px solid var(--code-border);border-radius:var(--r);padding:18px;margin:14px 0;font-family:'IBM Plex Mono',monospace;font-size:12px}
+.mem-sec{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#4b5563;margin:12px 0 8px;border-top:1px dashed #2d3044;padding-top:10px;font-family:'DM Sans',sans-serif;font-weight:700}
+.mem-sec:first-child{border-top:none;margin-top:0;padding-top:0}
+.mem-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.mem-lbl{color:#6b7280;min-width:80px;text-align:right;font-size:11px}
+.mem-box{background:#1e293b;border:1px solid #334155;border-radius:4px;padding:4px 10px;color:#f97316;min-width:80px;text-align:center}
+.mem-arr{color:#4b5563}
+.mem-heap{background:#082f49;border:1px solid #0369a1;border-radius:4px;padding:4px 12px;color:#7dd3fc;text-align:center}
+.mem-null{background:#1c1917;border:1px solid #44403c;border-radius:4px;padding:4px 10px;color:#78716c;text-align:center}
+.mem-note{font-size:10.5px;color:#4b5563;margin-top:8px;font-family:'DM Sans',sans-serif}
+
+/* ── COMPARISON BOX ── */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0}
+@media(max-width:620px){.vs{grid-template-columns:1fr}}
+.vs-col{border-radius:var(--r-sm);padding:14px;border:1px solid var(--edge)}
+.vs-col.left{background:#fff7ed;border-color:#fdba74}.vs-col.right{background:#eff6ff;border-color:#93c5fd}
+.vs-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.vs-col.left h4{color:#c2410c}.vs-col.right h4{color:#1d4ed8}
+.vs-col ul{list-style:none}.vs-col li{font-size:13px;color:var(--muted);margin-bottom:6px;padding-left:14px;position:relative}
+.vs-col li::before{content:'▸';position:absolute;left:0;color:#9ca3af}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-family:'DM Sans',sans-serif}
+.bd-b{background:#dbeafe;color:#1d4ed8}.bd-g{background:#d1fae5;color:#065f46}.bd-r{background:#fee2e2;color:#b91c1c}.bd-o{background:#fed7aa;color:#c2410c}.bd-p{background:#f3e8ff;color:#6b21a8}
+
+/* ── EXAM TRAP ── */
+.trap{background:linear-gradient(135deg,#fff1f2,#fff7ed);border:1px solid #fca5a5;border-radius:var(--r);padding:20px;margin:20px 0}
+.trap-hd{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;color:var(--warn);margin-bottom:12px}
+.trap-list{list-style:none}
+.trap-list li{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:13.5px;color:var(--ink)}
+.trap-list li::before{content:'⚠';font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* ── TOC ── */
+.toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin:20px 0}
+.toc-item{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--card);border:1px solid var(--edge);border-radius:var(--r-sm);cursor:pointer;transition:all .2s;text-decoration:none;color:var(--ink)}
+.toc-item:hover{border-color:var(--accent);background:#fff7ed;transform:translateY(-1px)}
+.toc-n{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--accent);min-width:24px}
+.toc-t{font-size:12.5px;font-weight:600}
+
+/* ── DIVIDER ── */
+hr{border:none;border-top:1px solid var(--edge);margin:28px 0}
+
+/* inline code */
+code{background:#f3f4f6;color:var(--accent);padding:2px 6px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:12.5px}
+
+/* scroll margin */
+[id]{scroll-margin-top:56px}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="prog" style="width:5%"></div>
+
+<nav class="topbar">
+  <div class="brand">☕ Java <span>Coach</span></div>
+  <div class="nav-scroll" id="navScroll">
+    <button class="ntab on" onclick="go('home')">Home</button>
+    <button class="ntab" onclick="go('t1')">1. Structure</button>
+    <button class="ntab" onclick="go('t2')">2. Classes &amp; Objects</button>
+    <button class="ntab" onclick="go('t3')">3. Instantiation</button>
+    <button class="ntab" onclick="go('t4')">4. Instance Vars</button>
+    <button class="ntab" onclick="go('t5')">5. Instance Methods</button>
+    <button class="ntab" onclick="go('t6')">6. Static Vars</button>
+    <button class="ntab" onclick="go('t7')">7. Static Methods</button>
+    <button class="ntab" onclick="go('t8')">8. Constructors</button>
+    <button class="ntab" onclick="go('t9')">9. Constructor Types</button>
+    <button class="ntab" onclick="go('t10')">10. this keyword</button>
+    <button class="ntab" onclick="go('t11')">11. Static vs Instance Block</button>
+    <button class="ntab" onclick="go('t12')">12. final</button>
+    <button class="ntab" onclick="go('t13')">13. static final</button>
+    <button class="ntab" onclick="go('t14')">14. Access Modifiers</button>
+    <button class="ntab" onclick="go('t15')">15. Packages</button>
+    <button class="ntab" onclick="go('t16')">16. Method Overloading</button>
+    <button class="ntab" onclick="go('t17')">17. Constructor Overloading</button>
+    <button class="ntab" onclick="go('t18')">18. Argument Passing</button>
+    <button class="ntab" onclick="go('t19')">19. Garbage Collection</button>
+  </div>
+</nav>
+
+<!-- ═══════════ HOME ═══════════ -->
+<div id="home" class="sec on"><div class="wrap">
+  <div class="hero">
+    <div class="topic-tag">☕ Java Practice Coach</div>
+    <h1>Stop Studying.<br>Start Drilling.</h1>
+    <p>19 topics. Every topic has: syntax recap → memory diagram → output prediction → debugging → challenge problems → interview questions → exam traps. No hand-holding. Pure practice.</p>
+  </div>
+  <div class="card orange">
+    <div class="card-title"><div class="icon ic-o">⚡</div>HOW THIS WORKS</div>
+    <p><strong>For every question:</strong> read the code → think about the answer → THEN click Reveal. If you reveal immediately, you're cheating yourself.</p>
+    <div class="note o"><div class="note-label">Practice Protocol</div><p>1. Read question → 2. Say answer out loud → 3. Reveal → 4. Compare → 5. If wrong, re-read the explanation until you truly understand WHY</p></div>
+  </div>
+  <div class="toc-grid">
+    <div class="toc-item" onclick="go('t1')"><span class="toc-n">01</span><span class="toc-t">Program Structure</span></div>
+    <div class="toc-item" onclick="go('t2')"><span class="toc-n">02</span><span class="toc-t">Classes &amp; Objects</span></div>
+    <div class="toc-item" onclick="go('t3')"><span class="toc-n">03</span><span class="toc-t">Object Instantiation</span></div>
+    <div class="toc-item" onclick="go('t4')"><span class="toc-n">04</span><span class="toc-t">Instance Variables</span></div>
+    <div class="toc-item" onclick="go('t5')"><span class="toc-n">05</span><span class="toc-t">Instance Methods</span></div>
+    <div class="toc-item" onclick="go('t6')"><span class="toc-n">06</span><span class="toc-t">Static Variables</span></div>
+    <div class="toc-item" onclick="go('t7')"><span class="toc-n">07</span><span class="toc-t">Static Methods</span></div>
+    <div class="toc-item" onclick="go('t8')"><span class="toc-n">08</span><span class="toc-t">Constructors</span></div>
+    <div class="toc-item" onclick="go('t9')"><span class="toc-n">09</span><span class="toc-t">Constructor Types</span></div>
+    <div class="toc-item" onclick="go('t10')"><span class="toc-n">10</span><span class="toc-t">this keyword</span></div>
+    <div class="toc-item" onclick="go('t11')"><span class="toc-n">11</span><span class="toc-t">Static vs Instance Block</span></div>
+    <div class="toc-item" onclick="go('t12')"><span class="toc-n">12</span><span class="toc-t">final keyword</span></div>
+    <div class="toc-item" onclick="go('t13')"><span class="toc-n">13</span><span class="toc-t">static final</span></div>
+    <div class="toc-item" onclick="go('t14')"><span class="toc-n">14</span><span class="toc-t">Access Modifiers</span></div>
+    <div class="toc-item" onclick="go('t15')"><span class="toc-n">15</span><span class="toc-t">Packages</span></div>
+    <div class="toc-item" onclick="go('t16')"><span class="toc-n">16</span><span class="toc-t">Method Overloading</span></div>
+    <div class="toc-item" onclick="go('t17')"><span class="toc-n">17</span><span class="toc-t">Constructor Overloading</span></div>
+    <div class="toc-item" onclick="go('t18')"><span class="toc-n">18</span><span class="toc-t">Argument Passing</span></div>
+    <div class="toc-item" onclick="go('t19')"><span class="toc-n">19</span><span class="toc-t">Garbage Collection</span></div>
+  </div>
+</div></div>
+
+<!-- ═══════════ T1: PROGRAM STRUCTURE ═══════════ -->
+<div id="t1" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 01</div><h1>Java Program Structure</h1><p>The skeleton every Java file must follow. Get this wrong and nothing compiles.</p></div>
+
+  <div class="card blue">
+    <div class="card-title"><div class="icon ic-b">📐</div>SYNTAX RECAP</div>
+    <div class="code-wrap"><div class="code-head"><span class="code-label">Required Order</span><span class="code-tag">Java</span></div><div class="code-body"><code><span class="cm">// 1st — package (optional, but must be FIRST if used)</span>
+<span class="kw">package</span> com.myapp;
+
+<span class="cm">// 2nd — imports</span>
+<span class="kw">import</span> java.util.Scanner;
+
+<span class="cm">// 3rd — class (filename must match public class name)</span>
+<span class="kw">public class</span> <span class="ty">MyClass</span> {
+    <span class="cm">// fields, methods, constructors</span>
+
+    <span class="cm">// Entry point — exact signature required</span>
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        System.out.<span class="mt">println</span>(<span class="st">"Runs here"</span>);
+    }
+}</code></div></div>
+    <table class="tbl"><tr><th>Element</th><th>Required?</th><th>Must Be</th></tr>
+    <tr><td><code>package</code></td><td>No</td><td>First statement if present</td></tr>
+    <tr><td><code>import</code></td><td>No</td><td>After package, before class</td></tr>
+    <tr><td>Class name</td><td>Yes</td><td>Must match filename exactly (case-sensitive)</td></tr>
+    <tr><td><code>main</code> signature</td><td>For entry point</td><td><code>public static void main(String[] args)</code></td></tr>
+    </table>
+  </div>
+
+  <div class="card green">
+    <div class="card-title"><div class="icon ic-g">🧠</div>COMMON BEGINNER MISTAKES</div>
+    <ul class="trap-list">
+      <li>Naming file <code>student.java</code> but class is <code>public class Student</code> → compile error</li>
+      <li>Writing <code>import</code> before <code>package</code> → compile error</li>
+      <li>Writing <code>void main()</code> instead of <code>public static void main(String[] args)</code> → JVM won't find it</li>
+      <li>Thinking <code>java.lang</code> needs to be imported — it's auto-included</li>
+    </ul>
+  </div>
+
+  <h3 style="font-size:16px;font-weight:700;margin:28px 0 16px;color:var(--ink)">🔍 Output Prediction — Think First, Then Reveal</h3>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q1.1</span></div>
+  <div class="quiz-body">
+    <div class="quiz-code"><span class="kw">public class</span> <span class="ty">Hello</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        System.out.<span class="mt">print</span>(<span class="st">"Java"</span>);
+        System.out.<span class="mt">print</span>(<span class="st">" is"</span>);
+        System.out.<span class="mt">println</span>(<span class="st">" fun"</span>);
+        System.out.<span class="mt">println</span>();
+        System.out.<span class="mt">println</span>(<span class="st">"Done"</span>);
+    }
+}</div>
+    <div class="think-box">💭 What do you think happens? Think before revealing!</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Java is fun
+
+Done</div><div class="ans-why"><strong>Step by step:</strong> <code>print()</code> writes without newline. So "Java", " is", " fun" all land on line 1. <code>println(" fun")</code> adds the newline. <code>println()</code> with no args prints just a blank line. Then "Done" on its own line.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Will it compile?</span><span class="quiz-num">Q1.2</span></div>
+  <div class="quiz-body">
+    <div class="quiz-code"><span class="cm">// File is named: hello.java</span>
+<span class="kw">public class</span> <span class="ty">Hello</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        System.out.<span class="mt">println</span>(<span class="st">"Hi"</span>);
+    }
+}</div>
+    <div class="think-box">💭 Will javac hello.java succeed?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: class Hello is public, should be declared in a file named Hello.java</div><div class="ans-why"><strong>Why:</strong> Java is case-sensitive. The file must be named <code>Hello.java</code> (capital H) to match <code>public class Hello</code>.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Will it compile?</span><span class="quiz-num">Q1.3</span></div>
+  <div class="quiz-body">
+    <div class="quiz-code"><span class="kw">import</span> java.util.Scanner;
+<span class="kw">package</span> com.school;
+<span class="kw">public class</span> <span class="ty">Test</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {}
+}</div>
+    <div class="think-box">💭 Anything wrong with the order?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: package declaration must be first statement</div><div class="ans-why"><strong>Rule:</strong> Order is always: <code>package</code> → <code>import</code> → <code>class</code>. Never swap them.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q1.4</span></div>
+  <div class="quiz-body">
+    <div class="quiz-code"><span class="kw">public class</span> <span class="ty">Nums</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        System.out.<span class="mt">println</span>(<span class="nm">1</span> + <span class="nm">2</span>);
+        System.out.<span class="mt">println</span>(<span class="st">"1"</span> + <span class="nm">2</span>);
+        System.out.<span class="mt">println</span>(<span class="nm">1</span> + <span class="st">"2"</span>);
+        System.out.<span class="mt">println</span>(<span class="st">""</span> + <span class="nm">1</span> + <span class="nm">2</span>);
+    }
+}</div>
+    <div class="think-box">💭 Predict all 4 lines!</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">3
+12
+12
+12</div><div class="ans-why"><strong>Line 1:</strong> int+int = 3. <strong>Line 2:</strong> String "1" + int 2 → String concatenation → "12". <strong>Line 3:</strong> int 1 + String "2" → "12". <strong>Line 4:</strong> "" + 1 → "1", then "1" + 2 → "12". The <code>+</code> operator becomes concatenation as soon as one side is a String.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-bug">Find the Bug</span><span class="quiz-num">Q1.5</span></div>
+  <div class="quiz-body">
+    <div class="quiz-code"><span class="kw">public class</span> <span class="ty">Runner</span> {
+    <span class="kw">static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        System.out.<span class="mt">println</span>(<span class="st">"Running!"</span>);
+    }
+}</div>
+    <div class="think-box">💭 Will the JVM run this? Why not?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Error: Main method not found in class Runner
+Please define the main method as: public static void main(String[] args)</div><div class="ans-why"><strong>Bug:</strong> Missing <code>public</code> keyword. The JVM looks for <code>public static void main</code> exactly. Removing <code>public</code> means the JVM cannot find the entry point. The class compiles fine, but <em>running</em> it fails.</div></div>
+  </div></div>
+
+  <div class="trap"><div class="trap-hd">⚠️ Exam Traps — Program Structure</div>
+  <ul class="trap-list">
+    <li>A file can contain multiple classes but only ONE can be <code>public</code>, and it must match the filename</li>
+    <li><code>main(String args[])</code> and <code>main(String[] args)</code> are both valid — the bracket position doesn't matter</li>
+    <li>Forgetting <code>static</code> in main → compiles fine but throws error at runtime</li>
+    <li><code>java.lang.*</code> is always imported — <code>String</code>, <code>System</code>, <code>Math</code> never need importing</li>
+  </ul></div>
+</div></div>
+
+<!-- ═══════════ T2: CLASSES & OBJECTS ═══════════ -->
+<div id="t2" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 02</div><h1>Classes &amp; Objects</h1><p>Class = blueprint. Object = the real thing built from it. This is OOP's core.</p></div>
+
+  <div class="card blue">
+    <div class="card-title"><div class="icon ic-b">📐</div>SYNTAX RECAP</div>
+    <div class="code-wrap"><div class="code-head"><span class="code-label">Class Anatomy</span><span class="code-tag">Java</span></div><div class="code-body"><code><span class="kw">public class</span> <span class="ty">Dog</span> {            <span class="cm">// Blueprint</span>
+    <span class="cm">// Fields (attributes)</span>
+    <span class="ty">String</span> <span class="vr">name</span>;
+    <span class="ty">int</span> <span class="vr">age</span>;
+
+    <span class="cm">// Method (behavior)</span>
+    <span class="kw">void</span> <span class="mt">bark</span>() {
+        System.out.<span class="mt">println</span>(<span class="vr">name</span> + <span class="st">" says: Woof!"</span>);
+    }
+}
+<span class="cm">// Creating objects (instances)</span>
+<span class="ty">Dog</span> <span class="vr">d1</span> = <span class="kw">new</span> <span class="ty">Dog</span>();   <span class="cm">// d1 is a reference on STACK pointing to heap</span>
+<span class="ty">Dog</span> <span class="vr">d2</span> = <span class="kw">new</span> <span class="ty">Dog</span>();   <span class="cm">// separate object, own fields</span>
+<span class="vr">d1</span>.<span class="vr">name</span> = <span class="st">"Rex"</span>;      <span class="cm">// dot operator accesses fields</span>
+<span class="vr">d1</span>.<span class="mt">bark</span>();             <span class="cm">// dot operator calls methods</span></code></div></div>
+  </div>
+
+  <div class="card orange">
+    <div class="card-title"><div class="icon ic-o">🧠</div>MEMORY VIEW</div>
+    <div class="mem">
+      <div class="mem-sec">STACK (main method's local variables)</div>
+      <div class="mem-row"><span class="mem-lbl">d1 →</span><div class="mem-box">0xA100</div><span class="mem-arr">──────→</span><div class="mem-heap">Dog{ name="Rex", age=0 }</div></div>
+      <div class="mem-row"><span class="mem-lbl">d2 →</span><div class="mem-box">0xB200</div><span class="mem-arr">──────→</span><div class="mem-heap">Dog{ name=null, age=0 }</div></div>
+      <div class="mem-sec">HEAP (objects live here)</div>
+      <div class="mem-note">KEY: d1 and d2 are REFERENCES (addresses), not the objects themselves. The actual data lives on the Heap.</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:16px;font-weight:700;margin:28px 0 16px">🔍 Output Prediction</h3>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q2.1</span></div>
+  <div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Car</span> {
+    <span class="ty">String</span> <span class="vr">brand</span>;
+    <span class="ty">int</span> <span class="vr">speed</span>;
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Car</span> <span class="vr">c</span> = <span class="kw">new</span> <span class="ty">Car</span>();
+        System.out.<span class="mt">println</span>(<span class="vr">c</span>.<span class="vr">brand</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">c</span>.<span class="vr">speed</span>);
+    }
+}</div>
+    <div class="think-box">💭 Fields were never assigned. What prints?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">null
+0</div><div class="ans-why"><strong>Default values:</strong> Instance fields auto-initialize. <code>String</code> → <code>null</code>. <code>int</code> → <code>0</code>. <code>boolean</code> → <code>false</code>. <code>double</code> → <code>0.0</code>. This is ONLY for instance/static fields, NOT local variables!</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q2.2 — Reference Sharing Trap</span></div>
+  <div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Student</span> {
+    <span class="ty">String</span> <span class="vr">name</span>;
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Student</span> <span class="vr">a</span> = <span class="kw">new</span> <span class="ty">Student</span>();
+        <span class="vr">a</span>.<span class="vr">name</span> = <span class="st">"Abebe"</span>;
+        <span class="ty">Student</span> <span class="vr">b</span> = <span class="vr">a</span>;      <span class="cm">// THINK carefully!</span>
+        <span class="vr">b</span>.<span class="vr">name</span> = <span class="st">"Meron"</span>;
+        System.out.<span class="mt">println</span>(<span class="vr">a</span>.<span class="vr">name</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">b</span>.<span class="vr">name</span>);
+    }
+}</div>
+    <div class="think-box">💭 Does b = a copy the object or the reference?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Meron
+Meron</div>
+    <div class="ans-why"><strong>Memory:</strong> <code>b = a</code> copies the address (reference), NOT the object. Both <code>a</code> and <code>b</code> point to the SAME object on the heap. Changing <code>b.name</code> changes the shared object. So <code>a.name</code> is also "Meron".<br><br>
+    Stack: a → 0xA100, b → 0xA100 (same!)<br>
+    Heap: Student{name="Meron"} at 0xA100</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q2.3</span></div>
+  <div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Dog</span> {
+    <span class="ty">String</span> <span class="vr">name</span> = <span class="st">"Buddy"</span>;
+    <span class="kw">void</span> <span class="mt">speak</span>() { System.out.<span class="mt">println</span>(<span class="vr">name</span> + <span class="st">": Woof"</span>); }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Dog</span> <span class="vr">x</span> = <span class="kw">new</span> <span class="ty">Dog</span>();
+        <span class="ty">Dog</span> <span class="vr">y</span> = <span class="kw">new</span> <span class="ty">Dog</span>();
+        <span class="vr">y</span>.<span class="vr">name</span> = <span class="st">"Max"</span>;
+        <span class="vr">x</span>.<span class="mt">speak</span>();
+        <span class="vr">y</span>.<span class="mt">speak</span>();
+    }
+}</div>
+    <div class="think-box">💭 Two objects, separate fields — trace each one</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Buddy: Woof
+Max: Woof</div><div class="ans-why">Unlike the previous question, <code>x</code> and <code>y</code> each got their own <code>new Dog()</code> call. Two separate objects on heap. Changing <code>y.name</code> only affects <code>y</code>'s object.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Will it compile?</span><span class="quiz-num">Q2.4</span></div>
+  <div class="quiz-body">
+    <div class="quiz-code"><span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Student</span> <span class="vr">s</span>;
+        System.out.<span class="mt">println</span>(<span class="vr">s</span>.<span class="vr">name</span>);
+    }
+}
+<span class="kw">class</span> <span class="ty">Student</span> { <span class="ty">String</span> <span class="vr">name</span>; }</div>
+    <div class="think-box">💭 Declared but never initialized with new. What happens?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: variable s might not have been initialized</div><div class="ans-why">Local variable <code>s</code> was declared but never assigned (<code>new Student()</code> was never called). Java forces you to initialize local variables before use. If <code>s</code> were an instance field, it would be null — but local variables have NO default.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q2.5 — Null Reference</span></div>
+  <div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Phone</span> { <span class="ty">String</span> <span class="vr">model</span>; }
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Phone</span> <span class="vr">p</span> = <span class="kw">null</span>;
+        System.out.<span class="mt">println</span>(<span class="vr">p</span>.<span class="vr">model</span>);
+    }
+}</div>
+    <div class="think-box">💭 p is null. What happens when you access its field?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Runtime Error: NullPointerException (NullPointerException)</div><div class="ans-why"><code>p</code> is <code>null</code> — it doesn't point to any object. Trying to access <code>p.model</code> is like asking "what's in the room at address 0?" — there is no room. NullPointerException is thrown at RUNTIME (not compile time), because the compiler doesn't track null values.</div></div>
+  </div></div>
+
+  <div class="trap"><div class="trap-hd">⚠️ Exam Traps — Classes &amp; Objects</div>
+  <ul class="trap-list">
+    <li><code>b = a</code> does NOT copy the object — it copies the reference address</li>
+    <li>Instance fields default to null/0/false. Local variables do NOT — they must be initialized</li>
+    <li>Accessing any member of a null reference → NullPointerException at runtime</li>
+    <li>Two different objects from the same class are completely independent</li>
+  </ul></div>
+</div></div>
+
+<!-- ═══════════ T4: INSTANCE VARIABLES ═══════════ -->
+<div id="t3" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 03</div><h1>Object Instantiation</h1><p>What exactly happens when you write <code>new Dog()</code>? Follow the memory step by step.</p></div>
+  <div class="card blue"><div class="card-title"><div class="icon ic-b">📐</div>SYNTAX + STEPS</div>
+  <div class="code-wrap"><div class="code-head"><span class="code-label">Instantiation</span></div><div class="code-body"><code><span class="ty">Dog</span> <span class="vr">d</span> = <span class="kw">new</span> <span class="ty">Dog</span>();
+<span class="cm">// Step 1: JVM allocates memory on the HEAP for a Dog object</span>
+<span class="cm">// Step 2: Fields initialized to defaults (null, 0, false)</span>
+<span class="cm">// Step 3: Constructor Dog() runs</span>
+<span class="cm">// Step 4: Address of heap object stored in d (on STACK)</span></code></div></div>
+  <ul class="steps"><li><div class="step-n">1</div><div class="step-c"><strong>Heap allocation:</strong> JVM finds free space on the heap and reserves it for the new object</div></li><li><div class="step-n">2</div><div class="step-c"><strong>Default init:</strong> all instance fields set to zero-equivalents (null, 0, 0.0, false)</div></li><li><div class="step-n">3</div><div class="step-c"><strong>Constructor runs:</strong> your initialization code executes, sets field values</div></li><li><div class="step-n">4</div><div class="step-c"><strong>Reference stored:</strong> the heap address is stored in the variable on the stack</div></li></ul></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-mem">Memory?</span><span class="quiz-num">Q3.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="ty">Student</span> <span class="vr">s1</span> = <span class="kw">new</span> <span class="ty">Student</span>();
+<span class="ty">Student</span> <span class="vr">s2</span> = <span class="vr">s1</span>;
+<span class="ty">Student</span> <span class="vr">s3</span> = <span class="kw">new</span> <span class="ty">Student</span>();</div>
+    <div class="think-box">💭 How many Student objects exist on the heap?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">2 objects on the heap</div><div class="ans-why"><code>new</code> was called TWICE. <code>s1</code> and <code>s2</code> both point to the first object. <code>s3</code> points to the second. <code>= s1</code> copies the reference, not a new object.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q3.2</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Employee</span> { <span class="ty">int</span> <span class="vr">id</span> = <span class="nm">100</span>; }
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Employee</span> <span class="vr">e1</span> = <span class="kw">new</span> <span class="ty">Employee</span>();
+        <span class="ty">Employee</span> <span class="vr">e2</span> = <span class="kw">new</span> <span class="ty">Employee</span>();
+        <span class="vr">e1</span>.<span class="vr">id</span> = <span class="nm">200</span>;
+        System.out.<span class="mt">println</span>(<span class="vr">e1</span>.<span class="vr">id</span> + <span class="st">" "</span> + <span class="vr">e2</span>.<span class="vr">id</span>);
+    }
+}</div>
+    <div class="think-box">💭 Each object initializes id=100. What after changing e1.id?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">200 100</div><div class="ans-why">Two separate objects. <code>e1.id = 200</code> only changes e1's own copy of id. e2.id stays 100 because they're independent objects.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q3.3</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="kw">int</span> <span class="vr">x</span>;
+        System.out.<span class="mt">println</span>(<span class="vr">x</span>);
+    }
+}</div>
+    <div class="think-box">💭 x is a local variable — does Java give it a default?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: variable x might not have been initialized</div><div class="ans-why">Local variables NEVER get default values. You must assign them before use. Only instance and static fields get defaults automatically.</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T4: INSTANCE VARS ═══════════ -->
+<div id="t4" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 04</div><h1>Instance Variables</h1><p>Each object's own data. No sharing. Each <code>new</code> creates a fresh copy.</p></div>
+  <div class="card blue"><div class="card-title"><div class="icon ic-b">📐</div>SYNTAX RECAP</div>
+  <div class="code-wrap"><div class="code-body"><code><span class="kw">class</span> <span class="ty">BankAccount</span> {
+    <span class="cm">// Instance variables — each object has its OWN copy</span>
+    <span class="ty">String</span> <span class="vr">owner</span>;           <span class="cm">// defaults to null</span>
+    <span class="ty">double</span> <span class="vr">balance</span> = <span class="nm">0.0</span>;  <span class="cm">// can initialize inline</span>
+    <span class="kw">private int</span> <span class="vr">pin</span>;        <span class="cm">// private: only inside class</span>
+}</code></div></div>
+  <table class="tbl"><tr><th>Feature</th><th>Instance Variable</th></tr>
+  <tr><td>Where declared</td><td>Inside class, outside all methods</td></tr>
+  <tr><td>Where stored</td><td>Heap (inside each object)</td></tr>
+  <tr><td>Default value</td><td>Yes (null/0/false)</td></tr>
+  <tr><td>Shared between objects?</td><td class="no">No — each object has its own</td></tr>
+  <tr><td>Accessed via</td><td><code>objectRef.fieldName</code></td></tr></table></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q4.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">BankAccount</span> {
+    <span class="ty">double</span> <span class="vr">balance</span>;
+    <span class="kw">void</span> <span class="mt">deposit</span>(<span class="ty">double</span> <span class="vr">amt</span>) { <span class="vr">balance</span> += <span class="vr">amt</span>; }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">BankAccount</span> <span class="vr">acc1</span> = <span class="kw">new</span> <span class="ty">BankAccount</span>();
+        <span class="ty">BankAccount</span> <span class="vr">acc2</span> = <span class="kw">new</span> <span class="ty">BankAccount</span>();
+        <span class="vr">acc1</span>.<span class="mt">deposit</span>(<span class="nm">500</span>);
+        <span class="vr">acc2</span>.<span class="mt">deposit</span>(<span class="nm">200</span>);
+        <span class="vr">acc1</span>.<span class="mt">deposit</span>(<span class="nm">300</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">acc1</span>.<span class="vr">balance</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">acc2</span>.<span class="vr">balance</span>);
+    }
+}</div>
+    <div class="think-box">💭 Trace each account's balance separately</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">800.0
+200.0</div><div class="ans-why">acc1 gets 500+300=800. acc2 gets 200. Instance variables are fully independent per object. Calling deposit on acc1 never affects acc2.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-bug">Find the Bug</span><span class="quiz-num">Q4.2</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Employee</span> {
+    <span class="ty">String</span> <span class="vr">name</span>;
+    <span class="ty">double</span> <span class="vr">salary</span>;
+    <span class="kw">void</span> <span class="mt">raiseSalary</span>(<span class="ty">double</span> <span class="vr">pct</span>) {
+        <span class="ty">double</span> <span class="vr">salary</span> = <span class="vr">salary</span> * (<span class="nm">1</span> + <span class="vr">pct</span> / <span class="nm">100</span>);
+    }
+}</div>
+    <div class="think-box">💭 Will this update the employee's salary?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Bug: local variable shadows instance variable + compile error</div><div class="ans-why"><code>double salary = salary * ...</code> declares a LOCAL variable named <code>salary</code> which shadows the instance field. This local variable is used before initialization → compile error. Fix: remove <code>double</code> keyword: <code>salary = salary * (1 + pct/100);</code> — or use <code>this.salary</code> for clarity.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q4.3</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Counter</span> {
+    <span class="ty">int</span> <span class="vr">count</span>;
+    <span class="kw">void</span> <span class="mt">increment</span>() {
+        <span class="ty">int</span> <span class="vr">count</span> = <span class="vr">this</span>.<span class="vr">count</span> + <span class="nm">1</span>;  <span class="cm">// local variable!</span>
+    }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Counter</span> <span class="vr">c</span> = <span class="kw">new</span> <span class="ty">Counter</span>();
+        <span class="vr">c</span>.<span class="mt">increment</span>();
+        <span class="vr">c</span>.<span class="mt">increment</span>();
+        System.out.<span class="mt">println</span>(<span class="vr">c</span>.<span class="vr">count</span>);
+    }
+}</div>
+    <div class="think-box">💭 Notice: increment creates a local int count, not updating the field</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">0</div><div class="ans-why">Inside <code>increment()</code>, <code>int count = this.count + 1</code> creates a LOCAL variable and discards it. The instance field <code>this.count</code> is never modified. Fix: <code>this.count = this.count + 1;</code> or simply <code>count++;</code></div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T5: INSTANCE METHODS ═══════════ -->
+<div id="t5" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 05</div><h1>Instance Methods</h1><p>Actions an object can perform. They always have access to the object's fields via <code>this</code>.</p></div>
+  <div class="card blue"><div class="card-title"><div class="icon ic-b">📐</div>SYNTAX</div>
+  <div class="code-wrap"><div class="code-body"><code><span class="kw">class</span> <span class="ty">Dog</span> {
+    <span class="ty">String</span> <span class="vr">name</span>;
+    <span class="ty">int</span> <span class="vr">energy</span> = <span class="nm">10</span>;
+
+    <span class="kw">void</span> <span class="mt">run</span>() {             <span class="cm">// instance method: belongs to object</span>
+        <span class="vr">energy</span> -= <span class="nm">2</span>;          <span class="cm">// implicitly this.energy -= 2</span>
+        System.out.<span class="mt">println</span>(<span class="vr">name</span> + <span class="st">" runs! Energy: "</span> + <span class="vr">energy</span>);
+    }
+
+    <span class="ty">int</span> <span class="mt">getEnergy</span>() {        <span class="cm">// getter — returns value</span>
+        <span class="kw">return</span> <span class="vr">energy</span>;
+    }
+}
+<span class="cm">// Must use object reference to call</span>
+<span class="ty">Dog</span> <span class="vr">d</span> = <span class="kw">new</span> <span class="ty">Dog</span>();
+<span class="vr">d</span>.<span class="mt">run</span>();  <span class="cm">// OK</span>
+<span class="ty">Dog</span>.<span class="mt">run</span>();  <span class="cm">// ERROR — can't call instance method on class name</span></code></div></div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q5.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Dog</span> {
+    <span class="ty">String</span> <span class="vr">name</span>;
+    <span class="ty">int</span> <span class="vr">energy</span> = <span class="nm">10</span>;
+    <span class="kw">void</span> <span class="mt">run</span>() { <span class="vr">energy</span> -= <span class="nm">2</span>; }
+    <span class="kw">void</span> <span class="mt">status</span>() { System.out.<span class="mt">println</span>(<span class="vr">name</span> + <span class="st">": "</span> + <span class="vr">energy</span>); }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Dog</span> <span class="vr">d</span> = <span class="kw">new</span> <span class="ty">Dog</span>();
+        <span class="vr">d</span>.<span class="vr">name</span> = <span class="st">"Rex"</span>;
+        <span class="vr">d</span>.<span class="mt">run</span>(); <span class="vr">d</span>.<span class="mt">run</span>(); <span class="vr">d</span>.<span class="mt">run</span>();
+        <span class="vr">d</span>.<span class="mt">status</span>();
+    }
+}</div>
+    <div class="think-box">💭 run() is called 3 times. Track energy.</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Rex: 4</div><div class="ans-why">energy starts at 10. Each run() subtracts 2. After 3 calls: 10-2-2-2 = 4.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q5.2</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Car</span> {
+    <span class="ty">int</span> <span class="vr">speed</span> = <span class="nm">0</span>;
+    <span class="kw">void</span> <span class="mt">accelerate</span>() { <span class="vr">speed</span> += <span class="nm">10</span>; }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Car</span>.<span class="mt">accelerate</span>();
+    }
+}</div>
+    <div class="think-box">💭 Calling instance method on class name instead of object</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: non-static method accelerate() cannot be referenced from a static context</div><div class="ans-why">Instance methods require an object: <code>Car c = new Car(); c.accelerate();</code>. You cannot call them on the class name alone.</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T6: STATIC VARIABLES ═══════════ -->
+<div id="t6" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 06</div><h1>Static Variables</h1><p>One copy shared by ALL objects of the class. Lives in Method Area, not heap.</p></div>
+
+  <div class="vs">
+    <div class="vs-col left"><h4>Instance Variable</h4><ul>
+      <li>Each object has its OWN copy</li><li>Lives on the HEAP inside each object</li><li>Accessed via <code>object.field</code></li><li>Created when object is created</li><li>Destroyed when object is GC'd</li>
+    </ul></div>
+    <div class="vs-col right"><h4>Static Variable</h4><ul>
+      <li>ONE copy shared by ALL objects</li><li>Lives in METHOD AREA</li><li>Accessed via <code>ClassName.field</code></li><li>Created when class is loaded</li><li>Destroyed when program ends</li>
+    </ul></div>
+  </div>
+
+  <div class="code-wrap"><div class="code-head"><span class="code-label">Pattern: Object Counter</span></div><div class="code-body"><code><span class="kw">class</span> <span class="ty">Student</span> {
+    <span class="ty">String</span> <span class="vr">name</span>;                    <span class="cm">// instance — per object</span>
+    <span class="kw">static int</span> <span class="vr">count</span> = <span class="nm">0</span>;           <span class="cm">// static — shared by all</span>
+
+    <span class="ty">Student</span>(<span class="ty">String</span> <span class="vr">name</span>) {
+        <span class="kw">this</span>.<span class="vr">name</span> = <span class="vr">name</span>;
+        <span class="vr">count</span>++;  <span class="cm">// every new student increments the shared counter</span>
+    }
+}</code></div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q6.1 — The Classic</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Student</span> {
+    <span class="kw">static int</span> <span class="vr">count</span> = <span class="nm">0</span>;
+    <span class="ty">Student</span>() { <span class="vr">count</span>++; }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Student</span> <span class="vr">s1</span> = <span class="kw">new</span> <span class="ty">Student</span>();
+        <span class="ty">Student</span> <span class="vr">s2</span> = <span class="kw">new</span> <span class="ty">Student</span>();
+        <span class="ty">Student</span> <span class="vr">s3</span> = <span class="kw">new</span> <span class="ty">Student</span>();
+        System.out.<span class="mt">println</span>(<span class="ty">Student</span>.<span class="vr">count</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">s1</span>.<span class="vr">count</span>);  <span class="cm">// valid but bad style</span>
+    }
+}</div>
+    <div class="think-box">💭 count is static. How many times did the constructor run?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">3
+3</div><div class="ans-why">Static <code>count</code> is shared. Each <code>new Student()</code> calls the constructor, incrementing the SAME count. After 3 objects: count=3. <code>s1.count</code> and <code>Student.count</code> both access the same memory location.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q6.2 — Mutation Trap</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Car</span> {
+    <span class="kw">static int</span> <span class="vr">maxSpeed</span> = <span class="nm">120</span>;
+    <span class="ty">int</span> <span class="vr">currentSpeed</span> = <span class="nm">0</span>;
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Car</span> <span class="vr">c1</span> = <span class="kw">new</span> <span class="ty">Car</span>();
+        <span class="ty">Car</span> <span class="vr">c2</span> = <span class="kw">new</span> <span class="ty">Car</span>();
+        <span class="vr">c1</span>.<span class="vr">maxSpeed</span> = <span class="nm">200</span>;   <span class="cm">// bad style, but legal</span>
+        <span class="vr">c1</span>.<span class="vr">currentSpeed</span> = <span class="nm">50</span>;
+        System.out.<span class="mt">println</span>(<span class="vr">c2</span>.<span class="vr">maxSpeed</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">c2</span>.<span class="vr">currentSpeed</span>);
+    }
+}</div>
+    <div class="think-box">💭 Changing c1.maxSpeed affects c2 — why?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">200
+0</div><div class="ans-why"><code>maxSpeed</code> is static — changing it via c1 changes THE ONLY COPY, which c2 also sees. <code>currentSpeed</code> is instance — c1's change only affects c1's object. c2.currentSpeed stays 0.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q6.3</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Phone</span> {
+    <span class="kw">static</span> <span class="ty">String</span> <span class="vr">brand</span> = <span class="st">"Samsung"</span>;
+    <span class="ty">String</span> <span class="vr">model</span>;
+    <span class="ty">Phone</span>(<span class="ty">String</span> <span class="vr">model</span>) { <span class="kw">this</span>.<span class="vr">model</span> = <span class="vr">model</span>; }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Phone</span> <span class="vr">p1</span> = <span class="kw">new</span> <span class="ty">Phone</span>(<span class="st">"A52"</span>);
+        <span class="ty">Phone</span> <span class="vr">p2</span> = <span class="kw">new</span> <span class="ty">Phone</span>(<span class="st">"S21"</span>);
+        <span class="ty">Phone</span>.<span class="vr">brand</span> = <span class="st">"Apple"</span>;
+        System.out.<span class="mt">println</span>(<span class="vr">p1</span>.<span class="vr">brand</span> + <span class="st">" "</span> + <span class="vr">p1</span>.<span class="vr">model</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">p2</span>.<span class="vr">brand</span> + <span class="st">" "</span> + <span class="vr">p2</span>.<span class="vr">model</span>);
+    }
+}</div>
+    <div class="think-box">💭 brand is changed after creating both phones</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Apple A52
+Apple S21</div><div class="ans-why">brand is static — changing it changes it for EVERYONE. Both p1 and p2 now see "Apple". model is instance, so p1 keeps "A52" and p2 keeps "S21".</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q6.4</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Test</span> {
+    <span class="kw">static int</span> <span class="vr">x</span>;
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        System.out.<span class="mt">println</span>(<span class="ty">Test</span>.<span class="vr">x</span>);
+    }
+}</div>
+    <div class="think-box">💭 Static field, never assigned. What's its default?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">0</div><div class="ans-why">Static fields, like instance fields, are auto-initialized. int static → 0. No NullPointerException, no error. This is safe to read.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-bug">Find the Bug</span><span class="quiz-num">Q6.5</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Employee</span> {
+    <span class="kw">static int</span> <span class="vr">headcount</span> = <span class="nm">0</span>;
+    <span class="ty">String</span> <span class="vr">name</span>;
+    <span class="ty">Employee</span>(<span class="ty">String</span> <span class="vr">n</span>) { <span class="vr">name</span>=<span class="vr">n</span>; <span class="vr">headcount</span>++; }
+    <span class="kw">void</span> <span class="mt">fire</span>() { headcount--; }  <span class="cm">// does this work?</span>
+    <span class="kw">static void</span> <span class="mt">getHeadcount</span>() { System.out.<span class="mt">println</span>(<span class="vr">name</span>); } <span class="cm">// ??</span>
+}</div>
+    <div class="think-box">💭 Which line has a bug and why?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error on getHeadcount(): non-static variable name cannot be referenced from a static context</div><div class="ans-why"><code>getHeadcount()</code> is a static method. Static methods don't have <code>this</code> — they don't know which object's <code>name</code> to use. Fix: print <code>headcount</code> instead of <code>name</code>: <code>System.out.println(headcount);</code>. The <code>fire()</code> method is fine — instance methods CAN access static fields.</div></div>
+  </div></div>
+
+  <div class="trap"><div class="trap-hd">⚠️ Exam Traps — Static Variables</div>
+  <ul class="trap-list">
+    <li>Accessing static field via object ref (<code>obj.staticField</code>) is LEGAL but bad style — use <code>ClassName.field</code></li>
+    <li>Static fields are initialized ONCE when the class loads, before any object is created</li>
+    <li>Static method CANNOT access instance variables (no <code>this</code> exists in static context)</li>
+    <li>Instance method CAN access static variables (it has access to everything)</li>
+  </ul></div>
+</div></div>
+
+<!-- ═══════════ T7: STATIC METHODS ═══════════ -->
+<div id="t7" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 07</div><h1>Static Methods</h1><p>Methods that belong to the class, not any object. No <code>this</code>. No instance access.</p></div>
+
+  <div class="vs"><div class="vs-col left"><h4>Instance Method</h4><ul>
+    <li>Needs an object to call</li><li>Has implicit <code>this</code></li><li>Can access instance fields</li><li>Can access static fields</li><li>Called: <code>obj.method()</code></li>
+  </ul></div><div class="vs-col right"><h4>Static Method</h4><ul>
+    <li>No object needed</li><li>No <code>this</code> — doesn't know which object</li><li>CANNOT access instance fields directly</li><li>Can access static fields</li><li>Called: <code>ClassName.method()</code></li>
+  </ul></div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q7.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">MathHelper</span> {
+    <span class="ty">int</span> <span class="vr">value</span> = <span class="nm">10</span>;
+    <span class="kw">static int</span> <span class="mt">doubleIt</span>(<span class="ty">int</span> <span class="vr">n</span>) {
+        System.out.<span class="mt">println</span>(<span class="vr">value</span>); <span class="cm">// accessing instance field in static!</span>
+        <span class="kw">return</span> <span class="vr">n</span> * <span class="nm">2</span>;
+    }
+}</div>
+    <div class="think-box">💭 Can a static method use an instance field?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: non-static variable value cannot be referenced from a static context</div><div class="ans-why">Static methods are class-level. They execute without any object. If you try to access <code>value</code>, Java would ask "which object's value?" — but there's no object. Solution: either make value static, or pass it as a parameter, or create an object inside the method.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q7.2 — null reference static call</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Dog</span> {
+    <span class="kw">static void</span> <span class="mt">bark</span>() { System.out.<span class="mt">println</span>(<span class="st">"Woof!"</span>); }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Dog</span> <span class="vr">d</span> = <span class="kw">null</span>;
+        <span class="vr">d</span>.<span class="mt">bark</span>();   <span class="cm">// d is null!</span>
+    }
+}</div>
+    <div class="think-box">💭 d is null. Will calling a static method via null crash?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Woof!</div><div class="ans-why">Surprise! This works. When Java sees <code>d.bark()</code>, it resolves <code>bark</code> at compile time to <code>Dog.bark()</code> because it's static. The value of <code>d</code> at runtime is irrelevant — it's never actually dereferenced. No NullPointerException! This is a famous exam trap.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q7.3</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Calculator</span> {
+    <span class="kw">static int</span> <span class="vr">ops</span> = <span class="nm">0</span>;
+    <span class="kw">static int</span> <span class="mt">add</span>(<span class="ty">int</span> <span class="vr">a</span>, <span class="ty">int</span> <span class="vr">b</span>) { <span class="vr">ops</span>++; <span class="kw">return</span> <span class="vr">a</span>+<span class="vr">b</span>; }
+    <span class="kw">static int</span> <span class="mt">mul</span>(<span class="ty">int</span> <span class="vr">a</span>, <span class="ty">int</span> <span class="vr">b</span>) { <span class="vr">ops</span>++; <span class="kw">return</span> <span class="vr">a</span>*<span class="vr">b</span>; }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        System.out.<span class="mt">println</span>(<span class="ty">Calculator</span>.<span class="mt">add</span>(<span class="nm">3</span>,<span class="nm">4</span>));
+        System.out.<span class="mt">println</span>(<span class="ty">Calculator</span>.<span class="mt">mul</span>(<span class="nm">2</span>,<span class="nm">5</span>));
+        System.out.<span class="mt">println</span>(<span class="ty">Calculator</span>.<span class="vr">ops</span>);
+    }
+}</div>
+    <div class="think-box">💭 Track ops counter and return values</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">7
+10
+2</div><div class="ans-why">add(3,4)=7, ops becomes 1. mul(2,5)=10, ops becomes 2. Final ops=2.</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T8: CONSTRUCTORS ═══════════ -->
+<div id="t8" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 08</div><h1>Constructors</h1><p>Special initializer that runs automatically when an object is created. No return type — not even void.</p></div>
+
+  <div class="card blue"><div class="card-title"><div class="icon ic-b">📐</div>SYNTAX RECAP</div>
+  <div class="code-wrap"><div class="code-body"><code><span class="kw">class</span> <span class="ty">Dog</span> {
+    <span class="ty">String</span> <span class="vr">name</span>;
+    <span class="ty">int</span> <span class="vr">age</span>;
+
+    <span class="cm">// Constructor — same name as class, NO return type</span>
+    <span class="ty">Dog</span>(<span class="ty">String</span> <span class="vr">name</span>, <span class="ty">int</span> <span class="vr">age</span>) {
+        <span class="kw">this</span>.<span class="vr">name</span> = <span class="vr">name</span>;
+        <span class="kw">this</span>.<span class="vr">age</span> = <span class="vr">age</span>;
+    }
+
+    <span class="cm">// void Dog() — This is NOT a constructor, it's a regular method!</span>
+    <span class="kw">void</span> <span class="ty">Dog</span>() { System.out.<span class="mt">println</span>(<span class="st">"I am a method"</span>); }
+}</code></div></div>
+  <table class="tbl"><tr><th>Feature</th><th>Constructor</th><th>Method</th></tr>
+  <tr><td>Name</td><td>Same as class</td><td>Any name</td></tr>
+  <tr><td>Return type</td><td class="no">None (not even void)</td><td class="yes">Must have one</td></tr>
+  <tr><td>Called by</td><td><code>new ClassName()</code></td><td><code>object.method()</code></td></tr>
+  <tr><td>Inherited?</td><td class="no">No</td><td class="yes">Yes</td></tr></table></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q8.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Car</span> {
+    <span class="ty">String</span> <span class="vr">brand</span>;
+    <span class="ty">Car</span>(<span class="ty">String</span> <span class="vr">brand</span>) {
+        <span class="kw">this</span>.<span class="vr">brand</span> = <span class="vr">brand</span>;
+        System.out.<span class="mt">println</span>(<span class="st">"Car created: "</span> + <span class="vr">brand</span>);
+    }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Car</span> <span class="vr">c1</span> = <span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"Toyota"</span>);
+        <span class="ty">Car</span> <span class="vr">c2</span> = <span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"BMW"</span>);
+    }
+}</div>
+    <div class="think-box">💭 Constructor runs once per new. How many times?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Car created: Toyota
+Car created: BMW</div><div class="ans-why">Constructor runs once for each <code>new</code>. Two <code>new</code> calls = constructor runs twice.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q8.2 — The Void Trap</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Student</span> {
+    <span class="ty">String</span> <span class="vr">name</span>;
+    <span class="kw">void</span> <span class="ty">Student</span>(<span class="ty">String</span> <span class="vr">name</span>) {  <span class="cm">// Is this a constructor?</span>
+        <span class="kw">this</span>.<span class="vr">name</span> = <span class="vr">name</span>;
+    }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Student</span> <span class="vr">s</span> = <span class="kw">new</span> <span class="ty">Student</span>(<span class="st">"Ali"</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">s</span>.<span class="vr">name</span>);
+    }
+}</div>
+    <div class="think-box">💭 void Student() — is this a constructor?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: constructor Student in class Student cannot be applied to given arguments</div><div class="ans-why"><code>void Student(String name)</code> is NOT a constructor — it's a regular method. A constructor has NO return type whatsoever. Since no real constructor exists, Java provides a no-arg default. But <code>new Student("Ali")</code> looks for a constructor taking a String — which doesn't exist. Result: compile error.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q8.3 — No Default Constructor</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Dog</span> {
+    <span class="ty">String</span> <span class="vr">name</span>;
+    <span class="ty">Dog</span>(<span class="ty">String</span> <span class="vr">name</span>) { <span class="kw">this</span>.<span class="vr">name</span> = <span class="vr">name</span>; }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Dog</span> <span class="vr">d</span> = <span class="kw">new</span> <span class="ty">Dog</span>();  <span class="cm">// No-arg constructor</span>
+    }
+}</div>
+    <div class="think-box">💭 You wrote a parameterized constructor. Does Java still give you a default?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: constructor Dog in class Dog cannot be applied to given arguments</div><div class="ans-why">Java ONLY provides a default no-arg constructor if you write ZERO constructors. The moment you write ANY constructor, the free default is gone. <code>new Dog()</code> fails because there's no no-arg constructor. Fix: add <code>Dog() {}</code> or use <code>new Dog("Rex")</code>.</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T9: CONSTRUCTOR TYPES ═══════════ -->
+<div id="t9" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 09</div><h1>Constructor Types</h1><p>Default, Parameterized, Copy, and Chained (this()). Know all four deeply.</p></div>
+
+  <div class="code-wrap"><div class="code-head"><span class="code-label">All 4 Types</span><span class="code-tag">Java</span></div><div class="code-body"><code><span class="kw">class</span> <span class="ty">Student</span> {
+    <span class="ty">String</span> <span class="vr">name</span>; <span class="ty">int</span> <span class="vr">age</span>; <span class="ty">double</span> <span class="vr">gpa</span>;
+
+    <span class="cm">// TYPE 1: Default (no args)</span>
+    <span class="ty">Student</span>() { <span class="kw">this</span>(<span class="st">"Unknown"</span>, <span class="nm">18</span>, <span class="nm">0.0</span>); }  <span class="cm">// chains to full!</span>
+
+    <span class="cm">// TYPE 2: Parameterized</span>
+    <span class="ty">Student</span>(<span class="ty">String</span> <span class="vr">name</span>, <span class="ty">int</span> <span class="vr">age</span>, <span class="ty">double</span> <span class="vr">gpa</span>) {
+        <span class="kw">this</span>.<span class="vr">name</span>=<span class="vr">name</span>; <span class="kw">this</span>.<span class="vr">age</span>=<span class="vr">age</span>; <span class="kw">this</span>.<span class="vr">gpa</span>=<span class="vr">gpa</span>;
+    }
+
+    <span class="cm">// TYPE 3: Copy constructor</span>
+    <span class="ty">Student</span>(<span class="ty">Student</span> <span class="vr">other</span>) {
+        <span class="kw">this</span>(<span class="vr">other</span>.<span class="vr">name</span>, <span class="vr">other</span>.<span class="vr">age</span>, <span class="vr">other</span>.<span class="vr">gpa</span>);
+    }
+}</code></div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q9.1 — Chaining Trace</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">BankAccount</span> {
+    <span class="ty">double</span> <span class="vr">balance</span>; <span class="ty">String</span> <span class="vr">owner</span>;
+
+    <span class="ty">BankAccount</span>() {
+        <span class="kw">this</span>(<span class="st">"Anonymous"</span>);
+        System.out.<span class="mt">println</span>(<span class="st">"A"</span>);
+    }
+    <span class="ty">BankAccount</span>(<span class="ty">String</span> <span class="vr">owner</span>) {
+        <span class="kw">this</span>(<span class="vr">owner</span>, <span class="nm">0.0</span>);
+        System.out.<span class="mt">println</span>(<span class="st">"B"</span>);
+    }
+    <span class="ty">BankAccount</span>(<span class="ty">String</span> <span class="vr">owner</span>, <span class="ty">double</span> <span class="vr">balance</span>) {
+        <span class="kw">this</span>.<span class="vr">owner</span>=<span class="vr">owner</span>; <span class="kw">this</span>.<span class="vr">balance</span>=<span class="vr">balance</span>;
+        System.out.<span class="mt">println</span>(<span class="st">"C"</span>);
+    }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) { <span class="kw">new</span> <span class="ty">BankAccount</span>(); }
+}</div>
+    <div class="think-box">💭 Trace the chain: no-arg → String → String+double. What order do prints happen?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">C
+B
+A</div><div class="ans-why">this() jumps to another constructor. Execution goes DEEP first, then unwinds. No-arg calls this("Anonymous") → execution pauses at A. String constructor calls this(owner, 0.0) → pauses at B. Full constructor runs → prints C. Returns to String constructor → prints B. Returns to no-arg → prints A. Like function call stack unwinding!</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q9.2 — Copy vs Reference</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Dog</span> {
+    <span class="ty">String</span> <span class="vr">name</span>;
+    <span class="ty">Dog</span>(<span class="ty">String</span> <span class="vr">n</span>) { <span class="vr">name</span>=<span class="vr">n</span>; }
+    <span class="ty">Dog</span>(<span class="ty">Dog</span> <span class="vr">other</span>) { <span class="vr">name</span>=<span class="vr">other</span>.<span class="vr">name</span>; }  <span class="cm">// copy constructor</span>
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Dog</span> <span class="vr">d1</span> = <span class="kw">new</span> <span class="ty">Dog</span>(<span class="st">"Rex"</span>);
+        <span class="ty">Dog</span> <span class="vr">d2</span> = <span class="kw">new</span> <span class="ty">Dog</span>(<span class="vr">d1</span>);   <span class="cm">// copy constructor</span>
+        <span class="ty">Dog</span> <span class="vr">d3</span> = <span class="vr">d1</span>;            <span class="cm">// reference copy</span>
+        <span class="vr">d1</span>.<span class="vr">name</span> = <span class="st">"Max"</span>;
+        System.out.<span class="mt">println</span>(<span class="vr">d1</span>.<span class="vr">name</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">d2</span>.<span class="vr">name</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">d3</span>.<span class="vr">name</span>);
+    }
+}</div>
+    <div class="think-box">💭 d2 uses copy constructor, d3 is reference. What changes when d1.name changes?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Max
+Rex
+Max</div><div class="ans-why">d2 was created with the copy constructor — it's a SEPARATE object with its own name field. d1.name changing doesn't affect d2.name. But d3 = d1 is just a reference copy — d3 points to THE SAME object as d1. So d3.name reflects the change to "Max".</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q9.3 — this() position</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Car</span> {
+    <span class="ty">String</span> <span class="vr">brand</span>;
+    <span class="ty">Car</span>() {
+        System.out.<span class="mt">println</span>(<span class="st">"Creating"</span>);  <span class="cm">// line 1</span>
+        <span class="kw">this</span>(<span class="st">"Default"</span>);               <span class="cm">// line 2</span>
+    }
+    <span class="ty">Car</span>(<span class="ty">String</span> <span class="vr">brand</span>) { <span class="kw">this</span>.<span class="vr">brand</span>=<span class="vr">brand</span>; }
+}</div>
+    <div class="think-box">💭 this() is on line 2, not line 1. Is that okay?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: call to this must be first statement in constructor</div><div class="ans-why"><code>this()</code> MUST be the absolute first statement in a constructor. You cannot put any code before it. Move <code>this("Default")</code> to line 1 and the println after it.</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T10: THIS KEYWORD ═══════════ -->
+<div id="t10" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 10</div><h1>The this Keyword</h1><p>The most misunderstood keyword. Three uses. Learn them all.</p></div>
+
+  <div class="card orange"><div class="card-title"><div class="icon ic-o">⚡</div>THREE USES OF this</div>
+  <table class="tbl"><tr><th>Use</th><th>Syntax</th><th>Purpose</th></tr>
+  <tr><td>1. Field disambiguation</td><td><code>this.name = name</code></td><td>Distinguish instance field from local param</td></tr>
+  <tr><td>2. Constructor chaining</td><td><code>this(args)</code></td><td>Call another constructor from same class</td></tr>
+  <tr><td>3. Pass current object</td><td><code>someMethod(this)</code></td><td>Send the current object as an argument</td></tr>
+  </table></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q10.1 — The Shadowing Bug</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Student</span> {
+    <span class="ty">String</span> <span class="vr">name</span>;
+    <span class="ty">int</span> <span class="vr">age</span>;
+    <span class="ty">Student</span>(<span class="ty">String</span> <span class="vr">name</span>, <span class="ty">int</span> <span class="vr">age</span>) {
+        name = name;    <span class="cm">// BUG: assigns param to itself</span>
+        age = age;      <span class="cm">// BUG: same problem</span>
+    }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Student</span> <span class="vr">s</span> = <span class="kw">new</span> <span class="ty">Student</span>(<span class="st">"Ali"</span>, <span class="nm">20</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">s</span>.<span class="vr">name</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">s</span>.<span class="vr">age</span>);
+    }
+}</div>
+    <div class="think-box">💭 Without this.name = name, what actually happens?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">null
+0</div><div class="ans-why"><code>name = name</code> assigns the PARAMETER to itself — it's a no-op. The INSTANCE FIELD <code>this.name</code> is never touched, so it stays null. Same for age. The fix is <code>this.name = name; this.age = age;</code></div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q10.2</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Car</span> {
+    <span class="ty">String</span> <span class="vr">brand</span>;
+    <span class="ty">int</span> <span class="vr">year</span>;
+
+    <span class="ty">Car</span>(<span class="ty">String</span> <span class="vr">brand</span>) {
+        <span class="kw">this</span>(<span class="vr">brand</span>, <span class="nm">2020</span>);    <span class="cm">// chain to 2-arg constructor</span>
+        System.out.<span class="mt">println</span>(<span class="st">"1-arg done"</span>);
+    }
+    <span class="ty">Car</span>(<span class="ty">String</span> <span class="vr">brand</span>, <span class="ty">int</span> <span class="vr">year</span>) {
+        <span class="kw">this</span>.<span class="vr">brand</span>=<span class="vr">brand</span>; <span class="kw">this</span>.<span class="vr">year</span>=<span class="vr">year</span>;
+        System.out.<span class="mt">println</span>(<span class="st">"2-arg done"</span>);
+    }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"Toyota"</span>);
+    }
+}</div>
+    <div class="think-box">💭 Which constructor prints first?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">2-arg done
+1-arg done</div><div class="ans-why"><code>this(brand, 2020)</code> jumps to the 2-arg constructor. That runs completely → "2-arg done". Then returns to 1-arg constructor which continues → "1-arg done". The code AFTER this() runs after the chained constructor finishes.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q10.3 — this in static context</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Dog</span> {
+    <span class="ty">String</span> <span class="vr">name</span> = <span class="st">"Rex"</span>;
+    <span class="kw">static void</span> <span class="mt">show</span>() {
+        System.out.<span class="mt">println</span>(<span class="kw">this</span>.<span class="vr">name</span>);
+    }
+}</div>
+    <div class="think-box">💭 Can this be used in a static method?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: non-static variable this cannot be referenced from a static context</div><div class="ans-why"><code>this</code> refers to the current object. In a static method, no object exists — the method belongs to the class, not any object. So <code>this</code> has no meaning there. Java refuses to compile it.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q10.4 — Method returns this</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Builder</span> {
+    <span class="ty">String</span> <span class="vr">result</span> = <span class="st">""</span>;
+    <span class="ty">Builder</span> <span class="mt">add</span>(<span class="ty">String</span> <span class="vr">s</span>) {
+        <span class="vr">result</span> += <span class="vr">s</span>;
+        <span class="kw">return</span> <span class="kw">this</span>;   <span class="cm">// return the same object</span>
+    }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Builder</span> <span class="vr">b</span> = <span class="kw">new</span> <span class="ty">Builder</span>();
+        <span class="vr">b</span>.<span class="mt">add</span>(<span class="st">"Hello"</span>).<span class="mt">add</span>(<span class="st">" World"</span>).<span class="mt">add</span>(<span class="st">"!"</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">b</span>.<span class="vr">result</span>);
+    }
+}</div>
+    <div class="think-box">💭 Returning this enables method chaining. What builds up?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Hello World!</div><div class="ans-why">Each <code>add()</code> appends to result and returns <code>this</code> (the same Builder object). So <code>.add("Hello").add(" World").add("!")</code> chains on the SAME object. Final result = "Hello World!". This pattern is called Method Chaining / Fluent API.</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T11: BLOCKS ═══════════ -->
+<div id="t11" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 11</div><h1>Static Block vs Instance Block</h1><p>The most common execution-order exam trap in Java.</p></div>
+
+  <div class="card orange"><div class="card-title"><div class="icon ic-o">⚡</div>EXECUTION ORDER RULE</div>
+  <div class="note y"><div class="note-label">Golden Rule</div><p><strong>Static block</strong> → runs ONCE when class is first loaded by JVM (before main!).<br><strong>Instance block</strong> → runs before constructor, every time an object is created.<br><strong>Constructor</strong> → runs after instance block, every time an object is created.</p></div>
+  <table class="tbl"><tr><th></th><th>Static Block</th><th>Instance Block</th><th>Constructor</th></tr>
+  <tr><td>Runs when</td><td>Class loads</td><td>Per object</td><td>Per object</td></tr>
+  <tr><td>How many times</td><td>Once only</td><td>Every new</td><td>Every new</td></tr>
+  <tr><td>Order</td><td>1st</td><td>2nd</td><td>3rd</td></tr>
+  <tr><td>Can access instance members?</td><td class="no">No</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+  </table></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output? — The Classic</span><span class="quiz-num">Q11.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Dog</span> {
+    <span class="kw">static</span> { System.out.<span class="mt">println</span>(<span class="st">"Static"</span>); }
+    { System.out.<span class="mt">println</span>(<span class="st">"Instance"</span>); }
+    <span class="ty">Dog</span>() { System.out.<span class="mt">println</span>(<span class="st">"Constructor"</span>); }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        System.out.<span class="mt">println</span>(<span class="st">"main starts"</span>);
+        <span class="kw">new</span> <span class="ty">Dog</span>();
+        <span class="kw">new</span> <span class="ty">Dog</span>();
+    }
+}</div>
+    <div class="think-box">💭 Note: class Dog is loaded BEFORE main starts. What order?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Static
+main starts
+Instance
+Constructor
+Instance
+Constructor</div><div class="ans-why">Dog class loads when JVM sees it referenced → Static block fires BEFORE main() even prints. Then main prints. Each new Dog() triggers: Instance block first, then Constructor. Static block never repeats.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q11.2 — Static field init order</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Config</span> {
+    <span class="kw">static int</span> <span class="vr">x</span> = <span class="mt">compute</span>();
+    <span class="kw">static</span> { System.out.<span class="mt">println</span>(<span class="st">"Block x="</span>+<span class="vr">x</span>); }
+    <span class="kw">static int</span> <span class="mt">compute</span>() {
+        System.out.<span class="mt">println</span>(<span class="st">"compute()"</span>);
+        <span class="kw">return</span> <span class="nm">42</span>;
+    }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        System.out.<span class="mt">println</span>(<span class="st">"main"</span>);
+        <span class="kw">new</span> <span class="ty">Config</span>();
+    }
+}</div>
+    <div class="think-box">💭 Static field initializer runs before static block. Track order carefully.</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">compute()
+Block x=42
+main</div><div class="ans-why">When Config class loads: static field <code>x = compute()</code> runs first → "compute()". Then static block → "Block x=42". Then main starts → "main". new Config() creates an object but there are no instance blocks or custom constructor, so nothing more prints.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q11.3 — Hard: Which fires first?</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Car</span> {
+    <span class="kw">static int</span> <span class="vr">count</span> = <span class="nm">0</span>;
+    <span class="ty">int</span> <span class="vr">id</span>;
+    <span class="kw">static</span> { System.out.<span class="mt">println</span>(<span class="st">"S"</span>); }
+    {
+        <span class="vr">id</span> = ++<span class="vr">count</span>;
+        System.out.<span class="mt">println</span>(<span class="st">"I:"</span>+<span class="vr">id</span>);
+    }
+    <span class="ty">Car</span>() { System.out.<span class="mt">println</span>(<span class="st">"C:"</span>+<span class="vr">id</span>); }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="kw">new</span> <span class="ty">Car</span>(); <span class="kw">new</span> <span class="ty">Car</span>();
+    }
+}</div>
+    <div class="think-box">💭 Trace static block (once) then instance block + constructor for each Car</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">S
+I:1
+C:1
+I:2
+C:2</div><div class="ans-why">Class loads → S (once). First new Car(): instance block runs (count=1, id=1, prints I:1), then constructor (prints C:1). Second new Car(): instance block (count=2, id=2, I:2), constructor (C:2).</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T12: FINAL ═══════════ -->
+<div id="t12" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 12</div><h1>final keyword</h1><p>Makes things unchangeable. Applied to variables, methods, and classes.</p></div>
+
+  <div class="card blue"><div class="card-title"><div class="icon ic-b">📐</div>THREE USES</div>
+  <table class="tbl"><tr><th>Applied to</th><th>Meaning</th><th>Example</th></tr>
+  <tr><td>Variable (local)</td><td>Assign once, never change</td><td><code>final int x = 5;</code></td></tr>
+  <tr><td>Instance field</td><td>Must be set in constructor; immutable after</td><td><code>final String id;</code></td></tr>
+  <tr><td>Method</td><td>Cannot be overridden by subclasses</td><td><code>public final void run(){}</code></td></tr>
+  <tr><td>Class</td><td>Cannot be subclassed</td><td><code>public final class Math{}</code></td></tr>
+  </table></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q12.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="kw">final int</span> <span class="vr">x</span> = <span class="nm">10</span>;
+        <span class="vr">x</span> = <span class="nm">20</span>;
+        System.out.<span class="mt">println</span>(<span class="vr">x</span>);
+    }
+}</div>
+    <div class="think-box">💭 Can you reassign a final local variable?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: cannot assign a value to final variable x</div><div class="ans-why">final local variable = assign once, done. Reassigning is a compile error.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q12.2 — final field must be set</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Student</span> {
+    <span class="kw">final</span> <span class="ty">String</span> <span class="vr">id</span>;   <span class="cm">// final field, not initialized here</span>
+    <span class="ty">Student</span>() {
+        System.out.<span class="mt">println</span>(<span class="st">"Created"</span>);
+        <span class="cm">// id never assigned!</span>
+    }
+}</div>
+    <div class="think-box">💭 final instance field not set in constructor. What happens?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: variable id might not have been initialized</div><div class="ans-why">A final instance field MUST be assigned either at declaration or in EVERY constructor. Java checks this at compile time to guarantee immutability.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q12.3 — final object reference</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Dog</span> { <span class="ty">String</span> <span class="vr">name</span>; }
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="kw">final</span> <span class="ty">Dog</span> <span class="vr">d</span> = <span class="kw">new</span> <span class="ty">Dog</span>();
+        <span class="vr">d</span>.<span class="vr">name</span> = <span class="st">"Rex"</span>;    <span class="cm">// modifying the OBJECT</span>
+        <span class="vr">d</span>.<span class="vr">name</span> = <span class="st">"Max"</span>;    <span class="cm">// modifying again</span>
+        <span class="cm">// d = new Dog();  would fail!</span>
+        System.out.<span class="mt">println</span>(<span class="vr">d</span>.<span class="vr">name</span>);
+    }
+}</div>
+    <div class="think-box">💭 final makes the REFERENCE constant, not the object itself</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Max</div><div class="ans-why"><code>final Dog d</code> means you can't reassign <code>d</code> to point to a different object. But you CAN still modify the object that <code>d</code> points to! The fields of the Dog are not final. This is a crucial distinction!</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T13: STATIC FINAL ═══════════ -->
+<div id="t13" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 13</div><h1>static final</h1><p>The Java constant. One value, shared by all, never changes. Write in UPPER_SNAKE_CASE.</p></div>
+
+  <div class="code-wrap"><div class="code-body"><code><span class="kw">class</span> <span class="ty">MathConstants</span> {
+    <span class="kw">public static final double</span> <span class="vr">PI</span> = <span class="nm">3.14159</span>;
+    <span class="kw">public static final int</span> <span class="vr">MAX_STUDENTS</span> = <span class="nm">50</span>;
+    <span class="cm">// static: one copy, belongs to class</span>
+    <span class="cm">// final: value never changes</span>
+    <span class="cm">// Together: a TRUE constant</span>
+}
+<span class="cm">// Access: ClassName.CONSTANT_NAME</span>
+System.out.<span class="mt">println</span>(<span class="ty">MathConstants</span>.<span class="vr">PI</span>);</code></div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q13.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Config</span> {
+    <span class="kw">public static final int</span> <span class="vr">MAX</span> = <span class="nm">100</span>;
+    <span class="kw">static</span> { System.out.<span class="mt">println</span>(<span class="st">"Loaded: MAX="</span>+<span class="vr">MAX</span>); }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        System.out.<span class="mt">println</span>(<span class="ty">Config</span>.<span class="vr">MAX</span>);
+        <span class="ty">Config</span>.<span class="vr">MAX</span> = <span class="nm">200</span>;  <span class="cm">// ???</span>
+    }
+}</div>
+    <div class="think-box">💭 Can you change a static final field?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: cannot assign a value to final variable MAX</div><div class="ans-why">static final = compile-time constant. Java won't let you change it. Period. Not from anywhere, not even from inside the class (after initialization).</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q13.2 — Constant vs static field</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">School</span> {
+    <span class="kw">static int</span> <span class="vr">studentCount</span> = <span class="nm">0</span>;        <span class="cm">// mutable static</span>
+    <span class="kw">static final int</span> <span class="vr">MAX_CAPACITY</span> = <span class="nm">500</span>; <span class="cm">// constant</span>
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">School</span>.<span class="vr">studentCount</span> = <span class="nm">250</span>;
+        System.out.<span class="mt">println</span>(<span class="ty">School</span>.<span class="vr">studentCount</span>);
+        System.out.<span class="mt">println</span>(<span class="ty">School</span>.<span class="vr">MAX_CAPACITY</span>);
+    }
+}</div>
+    <div class="think-box">💭 Static vs static final — what's the difference in behavior?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">250
+500</div><div class="ans-why"><code>studentCount</code> is mutable static — can be changed. <code>MAX_CAPACITY</code> is a constant — can only be read. Both are shared by all. The difference is mutability.</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T14: ACCESS MODIFIERS ═══════════ -->
+<div id="t14" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 14</div><h1>Access Modifiers</h1><p>Who can see what. Four levels of visibility.</p></div>
+
+  <div class="card blue"><div class="card-title"><div class="icon ic-b">🔒</div>THE FOUR MODIFIERS</div>
+  <table class="tbl"><tr><th>Modifier</th><th>Same Class</th><th>Same Package</th><th>Subclass</th><th>Anywhere</th></tr>
+  <tr><td><code>private</code></td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+  <tr><td>(default)</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+  <tr><td><code>protected</code></td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td></tr>
+  <tr><td><code>public</code></td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+  </table></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q14.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Person</span> {
+    <span class="kw">private</span> <span class="ty">String</span> <span class="vr">name</span>;
+    <span class="kw">public</span> <span class="ty">Person</span>(<span class="ty">String</span> <span class="vr">name</span>) { <span class="kw">this</span>.<span class="vr">name</span>=<span class="vr">name</span>; }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Person</span> <span class="vr">p</span> = <span class="kw">new</span> <span class="ty">Person</span>(<span class="st">"Ali"</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">p</span>.<span class="vr">name</span>);   <span class="cm">// accessing private from outside</span>
+    }
+}</div>
+    <div class="think-box">💭 Can Main access Person's private field?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: name has private access in Person</div><div class="ans-why">private fields are accessible ONLY within the same class. Main is a different class. The solution is to add a getter: <code>public String getName() { return name; }</code></div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q14.2</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">BankAccount</span> {
+    <span class="kw">private double</span> <span class="vr">balance</span> = <span class="nm">1000</span>;
+    <span class="kw">public double</span> <span class="mt">getBalance</span>() { <span class="kw">return</span> <span class="vr">balance</span>; }
+    <span class="kw">public void</span> <span class="mt">setBalance</span>(<span class="ty">double</span> <span class="vr">b</span>) {
+        <span class="kw">if</span>(<span class="vr">b</span>>=<span class="nm">0</span>) <span class="vr">balance</span>=<span class="vr">b</span>;
+    }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">BankAccount</span> <span class="vr">a</span> = <span class="kw">new</span> <span class="ty">BankAccount</span>();
+        <span class="vr">a</span>.<span class="mt">setBalance</span>(-<span class="nm">500</span>);  <span class="cm">// negative!</span>
+        System.out.<span class="mt">println</span>(<span class="vr">a</span>.<span class="mt">getBalance</span>());
+    }
+}</div>
+    <div class="think-box">💭 Setter has validation. Negative amount — does it update?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">1000.0</div><div class="ans-why">setBalance(-500) is called but the condition <code>if(b>=0)</code> fails. balance is NOT updated. It stays 1000. This demonstrates WHY private + setter = encapsulation: you can protect data with validation logic.</div></div>
+  </div></div>
+
+  <div class="trap"><div class="trap-hd">⚠️ Exam Traps — Access Modifiers</div>
+  <ul class="trap-list">
+    <li>No modifier = "package-private" (default), NOT private. Classes in same package CAN access it</li>
+    <li>private method in a class can be called from OTHER instances of the SAME class</li>
+    <li>protected allows subclass access even from a different package</li>
+    <li>Top-level class can only be public or package-private (never private or protected)</li>
+  </ul></div>
+</div></div>
+
+<!-- ═══════════ T15: PACKAGES ═══════════ -->
+<div id="t15" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 15</div><h1>Packages</h1><p>Namespaces for organizing classes. Prevent naming conflicts. Control access.</p></div>
+
+  <div class="code-wrap"><div class="code-body"><code><span class="cm">// ORDER: package → import → class  (never swap!)</span>
+<span class="kw">package</span> com.school.model;       <span class="cm">// declares this class belongs here</span>
+<span class="kw">import</span> java.util.ArrayList;     <span class="cm">// bring in class by full name</span>
+<span class="kw">import</span> java.util.*;             <span class="cm">// import all classes in java.util</span>
+<span class="cm">// java.lang.* is ALWAYS auto-imported (String, System, Math)</span></code></div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q15.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">import</span> java.util.Scanner;
+<span class="kw">package</span> com.myapp;
+<span class="kw">public class</span> <span class="ty">App</span> { }</div>
+    <div class="think-box">💭 What's wrong with the order?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: class, interface, or enum expected; or package declaration must be first statement</div><div class="ans-why">package must ALWAYS be first. import comes second. Writing import before package is always a compile error.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">True/False?</span><span class="quiz-num">Q15.2</span></div><div class="quiz-body">
+    <div class="quiz-q">Does <code>import java.util.*</code> also import classes from <code>java.util.regex</code>?</div>
+    <div class="think-box">💭 Does wildcard import cover sub-packages?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">FALSE — wildcard (*) only imports classes in that exact package, not sub-packages</div><div class="ans-why"><code>java.util.*</code> imports ArrayList, HashMap, Scanner, etc. from <code>java.util</code>. It does NOT import Pattern, Matcher from <code>java.util.regex</code>. For those you need a separate <code>import java.util.regex.*</code>.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q15.3</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">String</span> <span class="vr">s</span> = <span class="kw">new</span> <span class="ty">String</span>(<span class="st">"hello"</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">s</span>.<span class="mt">length</span>());
+    }
+}</code></div>
+    <div class="think-box">💭 No import for String or System. Will this compile?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">✅ Compiles and prints: 5</div><div class="ans-why">String and System are in java.lang which is AUTOMATICALLY imported in every Java file. You never need to import java.lang classes.</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T16: METHOD OVERLOADING ═══════════ -->
+<div id="t16" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 16</div><h1>Method Overloading</h1><p>Same name, different signature. Resolved at compile time. Return type alone doesn't count.</p></div>
+
+  <div class="card blue"><div class="card-title"><div class="icon ic-b">📐</div>RULES</div>
+  <table class="tbl"><tr><th>Criteria</th><th>Creates Overload?</th></tr>
+  <tr><td>Different number of parameters</td><td class="yes">Yes ✓</td></tr>
+  <tr><td>Different parameter types</td><td class="yes">Yes ✓</td></tr>
+  <tr><td>Different parameter order</td><td class="yes">Yes ✓</td></tr>
+  <tr><td>Different return type only</td><td class="no">No ✗ — Compile Error</td></tr>
+  <tr><td>Different access modifier only</td><td class="no">No ✗ — Compile Error</td></tr>
+  </table></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q16.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Printer</span> {
+    <span class="kw">void</span> <span class="mt">print</span>(<span class="ty">int</span> <span class="vr">x</span>)     { System.out.<span class="mt">println</span>(<span class="st">"int: "</span>+<span class="vr">x</span>); }
+    <span class="kw">void</span> <span class="mt">print</span>(<span class="ty">double</span> <span class="vr">x</span>)  { System.out.<span class="mt">println</span>(<span class="st">"double: "</span>+<span class="vr">x</span>); }
+    <span class="kw">void</span> <span class="mt">print</span>(<span class="ty">String</span> <span class="vr">x</span>)  { System.out.<span class="mt">println</span>(<span class="st">"String: "</span>+<span class="vr">x</span>); }
+    <span class="kw">void</span> <span class="mt">print</span>(<span class="ty">int</span> <span class="vr">x</span>, <span class="ty">int</span> <span class="vr">y</span>) { System.out.<span class="mt">println</span>(<span class="st">"2ints: "</span>+<span class="vr">x</span>+<span class="st">","</span>+<span class="vr">y</span>); }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Printer</span> <span class="vr">p</span> = <span class="kw">new</span> <span class="ty">Printer</span>();
+        <span class="vr">p</span>.<span class="mt">print</span>(<span class="nm">5</span>);
+        <span class="vr">p</span>.<span class="mt">print</span>(<span class="nm">5.0</span>);
+        <span class="vr">p</span>.<span class="mt">print</span>(<span class="st">"hi"</span>);
+        <span class="vr">p</span>.<span class="mt">print</span>(<span class="nm">1</span>,<span class="nm">2</span>);
+    }
+}</div>
+    <div class="think-box">💭 Match each call to the best signature</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">int: 5
+double: 5.0
+String: hi
+2ints: 1,2</div><div class="ans-why">Java picks the most specific matching method at compile time. 5 is int literal → print(int). 5.0 is double literal → print(double). "hi" is String → print(String). Two ints → print(int,int).</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q16.2 — Type Promotion</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Calc</span> {
+    <span class="kw">void</span> <span class="mt">show</span>(<span class="ty">int</span> <span class="vr">x</span>)  { System.out.<span class="mt">println</span>(<span class="st">"int"</span>); }
+    <span class="kw">void</span> <span class="mt">show</span>(<span class="ty">long</span> <span class="vr">x</span>) { System.out.<span class="mt">println</span>(<span class="st">"long"</span>); }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Calc</span> <span class="vr">c</span> = <span class="kw">new</span> <span class="ty">Calc</span>();
+        <span class="ty">byte</span> <span class="vr">b</span> = <span class="nm">5</span>;
+        <span class="vr">c</span>.<span class="mt">show</span>(<span class="vr">b</span>);
+    }
+}</div>
+    <div class="think-box">💭 b is byte. No show(byte). Which method gets called?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">int</div><div class="ans-why">Widening promotion: byte → short → int → long → float → double. Java promotes to the NEAREST wider type first. byte promotes to int before long. So show(int) is chosen.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q16.3 — Return type only</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Test</span> {
+    <span class="kw">int</span>    <span class="mt">getValue</span>() { <span class="kw">return</span> <span class="nm">1</span>; }
+    <span class="ty">double</span> <span class="mt">getValue</span>() { <span class="kw">return</span> <span class="nm">1.0</span>; }
+}</div>
+    <div class="think-box">💭 Only return type differs. Is this valid overloading?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: method getValue() is already defined in class Test</div><div class="ans-why">Return type is NOT part of the method signature for overloading purposes. Java can't tell which to call if you write <code>getValue()</code> — are you expecting int or double? It's ambiguous. Not allowed.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q16.4 — Ambiguous call</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Math</span> {
+    <span class="kw">void</span> <span class="mt">compute</span>(<span class="ty">int</span> <span class="vr">a</span>, <span class="ty">double</span> <span class="vr">b</span>) { System.out.<span class="mt">println</span>(<span class="st">"A"</span>); }
+    <span class="kw">void</span> <span class="mt">compute</span>(<span class="ty">double</span> <span class="vr">a</span>, <span class="ty">int</span> <span class="vr">b</span>) { System.out.<span class="mt">println</span>(<span class="st">"B"</span>); }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="kw">new</span> <span class="ty">Math</span>().<span class="mt">compute</span>(<span class="nm">5</span>, <span class="nm">5</span>);  <span class="cm">// two ints</span>
+    }
+}</div>
+    <div class="think-box">💭 Two int args. Can Java promote either one to double to match?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: reference to compute is ambiguous</div><div class="ans-why">Java could promote the first int to double (→ calls compute(double,int)) OR the second int to double (→ calls compute(int,double)). Both are equally valid. Java gives up → ambiguous call error.</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T17: CONSTRUCTOR OVERLOADING ═══════════ -->
+<div id="t17" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 17</div><h1>Constructor Overloading</h1><p>Multiple constructors, different parameter lists. Use this() to chain them cleanly.</p></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q17.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Car</span> {
+    <span class="ty">String</span> <span class="vr">brand</span>; <span class="ty">int</span> <span class="vr">year</span>; <span class="ty">double</span> <span class="vr">price</span>;
+
+    <span class="ty">Car</span>() { <span class="kw">this</span>(<span class="st">"Generic"</span>, <span class="nm">2020</span>, <span class="nm">10000</span>); }
+    <span class="ty">Car</span>(<span class="ty">String</span> <span class="vr">brand</span>) { <span class="kw">this</span>(<span class="vr">brand</span>, <span class="nm">2020</span>, <span class="nm">15000</span>); }
+    <span class="ty">Car</span>(<span class="ty">String</span> <span class="vr">brand</span>, <span class="ty">int</span> <span class="vr">year</span>, <span class="ty">double</span> <span class="vr">price</span>) {
+        <span class="kw">this</span>.<span class="vr">brand</span>=<span class="vr">brand</span>; <span class="kw">this</span>.<span class="vr">year</span>=<span class="vr">year</span>; <span class="kw">this</span>.<span class="vr">price</span>=<span class="vr">price</span>;
+        System.out.<span class="mt">println</span>(<span class="vr">brand</span>+<span class="st">"|"</span>+<span class="vr">year</span>+<span class="st">"|"</span>+<span class="vr">price</span>);
+    }
+}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="kw">new</span> <span class="ty">Car</span>();
+        <span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"Toyota"</span>);
+        <span class="kw">new</span> <span class="ty">Car</span>(<span class="st">"BMW"</span>, <span class="nm">2023</span>, <span class="nm">45000</span>);
+    }
+}</div>
+    <div class="think-box">💭 All three chains eventually call the full 3-arg constructor</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Generic|2020|10000.0
+Toyota|2020|15000.0
+BMW|2023|45000.0</div><div class="ans-why">All roads lead to the 3-arg constructor which has the print. No-arg chains there with defaults. 1-arg chains there with partial defaults. 3-arg goes directly.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-compile">Compile?</span><span class="quiz-num">Q17.2 — Circular this()</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Test</span> {
+    <span class="ty">Test</span>() { <span class="kw">this</span>(<span class="nm">5</span>); }
+    <span class="ty">Test</span>(<span class="ty">int</span> <span class="vr">x</span>) { <span class="kw">this</span>(); }  <span class="cm">// loops back!</span>
+}</div>
+    <div class="think-box">💭 this() chaining back to the caller — infinite loop?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">❌ Compile Error: recursive constructor invocation</div><div class="ans-why">Java detects circular constructor chaining at compile time and refuses it. You cannot have A calls this() → B, B calls this() → A. This would be infinite recursion.</div></div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T18: ARGUMENT PASSING ═══════════ -->
+<div id="t18" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 18</div><h1>Argument Passing</h1><p>Java is ALWAYS pass-by-value. For primitives: value copied. For objects: reference copied.</p></div>
+
+  <div class="card orange"><div class="card-title"><div class="icon ic-o">⚡</div>THE GOLDEN RULE</div>
+  <div class="vs"><div class="vs-col left"><h4>Primitive argument</h4><ul>
+    <li>A COPY of the value is passed</li><li>Original variable is NEVER changed</li><li>Method works on its own copy</li>
+  </ul></div><div class="vs-col right"><h4>Object argument</h4><ul>
+    <li>A COPY of the reference is passed</li><li>Method can modify the object's fields</li><li>But can't make caller's variable point elsewhere</li>
+  </ul></div></div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q18.1 — Primitive</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">static void</span> <span class="mt">triple</span>(<span class="ty">int</span> <span class="vr">x</span>) {
+        <span class="vr">x</span> = <span class="vr">x</span> * <span class="nm">3</span>;
+        System.out.<span class="mt">println</span>(<span class="st">"Inside: "</span> + <span class="vr">x</span>);
+    }
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">int</span> <span class="vr">n</span> = <span class="nm">10</span>;
+        <span class="mt">triple</span>(<span class="vr">n</span>);
+        System.out.<span class="mt">println</span>(<span class="st">"Outside: "</span> + <span class="vr">n</span>);
+    }
+}</div>
+    <div class="think-box">💭 Does triple() modify the original n?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Inside: 30
+Outside: 10</div><div class="ans-why">n=10 is passed by value. triple() gets a COPY named x. x=30 inside the method. But n in main never changes. Primitives = always safe from modification.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q18.2 — Object argument</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Dog</span> { <span class="ty">String</span> <span class="vr">name</span>; }
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">static void</span> <span class="mt">rename</span>(<span class="ty">Dog</span> <span class="vr">d</span>) {
+        <span class="vr">d</span>.<span class="vr">name</span> = <span class="st">"Max"</span>;   <span class="cm">// modifies the object</span>
+    }
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Dog</span> <span class="vr">myDog</span> = <span class="kw">new</span> <span class="ty">Dog</span>();
+        <span class="vr">myDog</span>.<span class="vr">name</span> = <span class="st">"Rex"</span>;
+        <span class="mt">rename</span>(<span class="vr">myDog</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">myDog</span>.<span class="vr">name</span>);
+    }
+}</div>
+    <div class="think-box">💭 rename() modifies d.name. Does it affect myDog?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Max</div><div class="ans-why">myDog's reference (address 0xA100) is copied into d. d still points to the SAME Dog object. Modifying d.name modifies the actual object, which myDog also sees. The object was changed — not the reference variable.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">Output?</span><span class="quiz-num">Q18.3 — Reassigning the reference</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Dog</span> { <span class="ty">String</span> <span class="vr">name</span>; }
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">static void</span> <span class="mt">replaceWith</span>(<span class="ty">Dog</span> <span class="vr">d</span>) {
+        <span class="vr">d</span> = <span class="kw">new</span> <span class="ty">Dog</span>();   <span class="cm">// d now points to NEW object</span>
+        <span class="vr">d</span>.<span class="vr">name</span> = <span class="st">"Max"</span>;
+    }
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Dog</span> <span class="vr">myDog</span> = <span class="kw">new</span> <span class="ty">Dog</span>();
+        <span class="vr">myDog</span>.<span class="vr">name</span> = <span class="st">"Rex"</span>;
+        <span class="mt">replaceWith</span>(<span class="vr">myDog</span>);
+        System.out.<span class="mt">println</span>(<span class="vr">myDog</span>.<span class="vr">name</span>);
+    }
+}</div>
+    <div class="think-box">💭 replaceWith makes d point to a NEW object. Does myDog change?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">Rex</div><div class="ans-why">myDog's reference was COPIED into d. <code>d = new Dog()</code> makes d point to a new object — but this only changes the LOCAL copy d. myDog in main still points to the original Dog with name "Rex". You cannot make a caller's variable point to a different object through a method parameter.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-mem">Memory?</span><span class="quiz-num">Q18.4 — Complete the diagram</span></div><div class="quiz-body">
+    <div class="quiz-q">After <code>replaceWith(myDog)</code> executes (from Q18.3), draw the memory state.</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box">
+      <div class="mem">
+        <div class="mem-sec">STACK (during replaceWith call)</div>
+        <div class="mem-row"><span class="mem-lbl">myDog →</span><div class="mem-box">0xA100</div><span class="mem-arr">──→</span><div class="mem-heap">Dog{name="Rex"} — ORIGINAL</div></div>
+        <div class="mem-row"><span class="mem-lbl">d →</span><div class="mem-box">0xB200</div><span class="mem-arr">──→</span><div class="mem-heap">Dog{name="Max"} — NEW (orphaned after method)</div></div>
+        <div class="mem-sec">After method returns: d is gone. myDog still points to 0xA100. The 0xB200 object is now unreachable → eligible for garbage collection.</div>
+      </div>
+    </div>
+  </div></div>
+</div></div>
+
+<!-- ═══════════ T19: GARBAGE COLLECTION ═══════════ -->
+<div id="t19" class="sec"><div class="wrap">
+  <div class="hero"><div class="topic-tag">Topic 19</div><h1>Garbage Collection</h1><p>Java reclaims memory from objects with no references. Automatic, but not immediate.</p></div>
+
+  <div class="card blue"><div class="card-title"><div class="icon ic-b">🗑️</div>WHEN IS AN OBJECT ELIGIBLE FOR GC?</div>
+  <table class="tbl"><tr><th>Scenario</th><th>Example</th><th>GC Eligible?</th></tr>
+  <tr><td>Reference set to null</td><td><code>Dog d = new Dog(); d = null;</code></td><td class="yes">Yes</td></tr>
+  <tr><td>Reference reassigned</td><td><code>d = new Dog();</code> (old object lost)</td><td class="yes">Yes — old one</td></tr>
+  <tr><td>Method exits, local ref gone</td><td>Object created inside method, not returned</td><td class="yes">Yes</td></tr>
+  <tr><td>Still has a reference</td><td><code>Dog d = new Dog();</code> d still points to it</td><td class="no">No</td></tr>
+  </table></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-mem">GC?</span><span class="quiz-num">Q19.1</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Dog</span> {}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Dog</span> <span class="vr">d1</span> = <span class="kw">new</span> <span class="ty">Dog</span>();   <span class="cm">// Object A</span>
+        <span class="ty">Dog</span> <span class="vr">d2</span> = <span class="kw">new</span> <span class="ty">Dog</span>();   <span class="cm">// Object B</span>
+        <span class="vr">d1</span> = <span class="vr">d2</span>;               <span class="cm">// d1 now points to B</span>
+        <span class="vr">d2</span> = <span class="kw">null</span>;             <span class="cm">// d2 loses reference to B</span>
+        <span class="cm">// At this point, is any object GC-eligible?</span>
+    }
+}</div>
+    <div class="think-box">💭 Track what d1 and d2 point to at each step</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box">
+      <div class="mem">
+        <div class="mem-sec">After d1 = new Dog()</div>
+        <div class="mem-row"><span class="mem-lbl">d1 →</span><div class="mem-heap">Object A</div></div>
+        <div class="mem-sec">After d2 = new Dog()</div>
+        <div class="mem-row"><span class="mem-lbl">d2 →</span><div class="mem-heap">Object B</div></div>
+        <div class="mem-sec">After d1 = d2</div>
+        <div class="mem-row"><span class="mem-lbl">d1 →</span><div class="mem-heap">Object B</div></div>
+        <div class="mem-row"><span class="mem-lbl">Object A →</span><div class="mem-null">unreachable!</div></div>
+        <div class="mem-section">After d2 = null</div>
+        <div class="mem-row"><span class="mem-lbl">d2 →</span><div class="mem-null">null</div></div>
+        <div class="mem-row"><span class="mem-lbl">d1 →</span><div class="mem-heap">Object B (still alive!)</div></div>
+      </div>
+      <div class="ans-why">Object A is GC-eligible after <code>d1 = d2</code>. Object B is still alive because d1 holds a reference to it. Setting d2=null doesn't kill B since d1 still points there.</div>
+    </div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-mem">GC?</span><span class="quiz-num">Q19.2</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">static void</span> <span class="mt">createDog</span>() {
+        <span class="ty">Dog</span> <span class="vr">temp</span> = <span class="kw">new</span> <span class="ty">Dog</span>();
+        <span class="vr">temp</span>.<span class="vr">name</span> = <span class="st">"Fluffy"</span>;
+        <span class="cm">// method ends here</span>
+    }
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="mt">createDog</span>();
+        <span class="cm">// Is the Dog still alive?</span>
+    }
+}</div>
+    <div class="think-box">💭 temp is a local variable. What happens when the method returns?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">The Dog object becomes GC-eligible when createDog() returns</div><div class="ans-why">When createDog() exits, its stack frame is destroyed. temp (the only reference to the Dog) disappears. The Dog on the heap has no more references → GC-eligible. The object is NOT immediately destroyed — GC runs at its own schedule.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-out">True/False?</span><span class="quiz-num">Q19.3</span></div><div class="quiz-body">
+    <div class="quiz-q">Can you force garbage collection to run immediately using <code>System.gc()</code>?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box"><div class="ans-out">FALSE — System.gc() is just a HINT. The JVM may or may not honor it.</div><div class="ans-why"><code>System.gc()</code> suggests that garbage collection should run, but the JVM is free to ignore this hint. There is NO way to force GC to run at a specific time in Java. This is by design — GC is fully managed by the JVM.</div></div>
+  </div></div>
+
+  <div class="quiz"><div class="quiz-top"><span class="quiz-badge qb-mem">GC? Count objects</span><span class="quiz-num">Q19.4 — Hard</span></div><div class="quiz-body">
+    <div class="quiz-code"><span class="kw">class</span> <span class="ty">Student</span> {}
+<span class="kw">public class</span> <span class="ty">Main</span> {
+    <span class="kw">public static void</span> <span class="mt">main</span>(<span class="ty">String</span>[] args) {
+        <span class="ty">Student</span> <span class="vr">s1</span> = <span class="kw">new</span> <span class="ty">Student</span>(); <span class="cm">// A</span>
+        <span class="ty">Student</span> <span class="vr">s2</span> = <span class="kw">new</span> <span class="ty">Student</span>(); <span class="cm">// B</span>
+        <span class="ty">Student</span> <span class="vr">s3</span> = <span class="vr">s1</span>;
+        <span class="vr">s1</span> = <span class="kw">new</span> <span class="ty">Student</span>(); <span class="cm">// C — s1 now points here</span>
+        <span class="vr">s3</span> = <span class="vr">s2</span>;
+        <span class="vr">s2</span> = <span class="kw">null</span>;
+        <span class="cm">// How many objects are GC-eligible?</span>
+    }
+}</div>
+    <div class="think-box">💭 Trace every reference. Which objects have zero references?</div>
+    <button class="reveal-btn" onclick="rev(this)">▶ Reveal Answer</button>
+    <div class="ans-box">
+      <div class="mem">
+        <div class="mem-sec">Tracing references at end:</div>
+        <div class="mem-row"><span class="mem-lbl">s1 →</span><div class="mem-heap">Object C</div></div>
+        <div class="mem-row"><span class="mem-lbl">s2 →</span><div class="mem-null">null</div></div>
+        <div class="mem-row"><span class="mem-lbl">s3 →</span><div class="mem-heap">Object B</div></div>
+        <div class="mem-row"><span class="mem-lbl">Object A →</span><div class="mem-null">UNREACHABLE (GC eligible)</div></div>
+      </div>
+      <div class="ans-why"><strong>Answer: 1 object (A) is GC-eligible.</strong><br>A: s1 originally pointed to A, then s1=new Student() (C). s3 pointed to A (s3=s1), then s3=s2 (B). Nobody points to A now → GC eligible.<br>B: s3 still points to it → alive.<br>C: s1 points to it → alive.</div>
+    </div>
+  </div></div>
+
+  <div class="trap"><div class="trap-hd">⚠️ Exam Traps — Garbage Collection</div>
+  <ul class="trap-list">
+    <li><code>System.gc()</code> is a HINT, not a command. GC timing is non-deterministic.</li>
+    <li>An object becomes eligible for GC when NO MORE references point to it — not when you set one variable to null</li>
+    <li>Circular references (A points to B, B points to A) with no external reference → both are GC-eligible. Java's GC handles cycles.</li>
+    <li>You cannot resurrect an object once it has been GC'd</li>
+    <li><code>finalize()</code> is deprecated — never rely on it for cleanup</li>
+  </ul></div>
+</div></div>
+
+<script>
+const sections=['home','t1','t2','t3','t4','t5','t6','t7','t8','t9','t10','t11','t12','t13','t14','t15','t16','t17','t18','t19'];
+
+function go(id){
+  sections.forEach(s=>{
+    const el=document.getElementById(s);
+    if(el) el.classList.remove('on');
+  });
+  const el=document.getElementById(id);
+  if(el) el.classList.add('on');
+  document.querySelectorAll('.ntab').forEach((t,i)=>{
+    t.classList.toggle('on', sections[i]===id);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  const idx=sections.indexOf(id);
+  document.getElementById('prog').style.width=((idx+1)/sections.length*100)+'%';
+}
+
+function rev(btn){
+  const box=btn.nextElementSibling;
+  const show=box.classList.toggle('show');
+  btn.textContent=show?'▼ Hide Answer':'▶ Reveal Answer';
+}
+</script>
+</body>
+</html>
